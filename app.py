@@ -1,0 +1,97 @@
+from flask import Flask,render_template,url_for,redirect
+from flask_sqlalchemy import SQLAlchemy
+from flask_login import UserMixin,login_user,LoginManager,login_required,logout_user
+from flask_bcrypt import Bcrypt
+
+from flask_wtf import FlaskForm
+from wtforms import StringField,PasswordField,SubmitField
+from wtforms.validators import InputRequired,Length, ValidationError
+
+app=Flask(__name__)
+bcrypt=Bcrypt(app)
+app.config['SQLALCHEMY_DATABASE_URI']="sqlite:///test.db"
+app.config["SECRET_KEY"]='thisisasecretkey'
+
+login_manager=LoginManager()
+login_manager.init_app(app)
+login_manager.login_view="login"
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
+
+
+db=SQLAlchemy(app)
+
+class User(db.Model,UserMixin):
+    id=db.Column(db.Integer,primary_key=True)
+    username=db.Column(db.String(50),nullable=False,unique=True)
+    password=db.Column(db.String(50),nullable=False)
+
+
+class RegisterForm(FlaskForm):
+    username=StringField(validators=[InputRequired(),Length(min=4,max=20)],render_kw={"placeholder":"Username"})
+    password=PasswordField(validators=[InputRequired(),Length(min=4,max=20)],render_kw={"placeholder":"Password"})
+    submit=SubmitField("Submit")
+
+def validate_user(self,username):
+    existing_user=User.query.filter_by(username=username.data).first()
+
+    if existing_user:
+        raise ValidationError(
+             "This username already exists")
+
+class Login(FlaskForm):
+    username=StringField(validators=[InputRequired(),Length(min=4,max=20)],render_kw={'placeholder':'username'})
+    password=PasswordField(validators=[InputRequired(),Length(min=4,max=20)],render_kw={'placeholder':'Password'})
+
+    submit=SubmitField('Submit')
+
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+@app.route('/login',methods=['GET','POST'])
+def login():
+    form=Login()
+    if form.validate_on_submit():
+        user_in=User.query.filter_by(username=form.username.data).first()
+        if user_in:
+            if bcrypt.check_password_hash(user_in.password,form.password.data):
+                login_user(user_in)
+                return redirect('/dashboard')
+    
+    return render_template('login.html',form=form)
+
+@app.route('/signup',methods=['GET','POST'])
+def signup():
+    form=RegisterForm()
+    
+
+    if form.validate_on_submit():
+        hashed_pass=bcrypt.generate_password_hash(form.password.data)
+        new_user=User(username=form.username.data,password=hashed_pass)
+        db.session.add(new_user)
+        db.session.commit()
+        return redirect('/login')
+        
+
+
+    return render_template('signup.html',form=form)
+
+@app.route('/dashboard')
+@login_required
+def dashboard():
+    return render_template('dashboard.html')
+
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect ('/login')
+
+
+if __name__=='__main__':
+    app.run(debug=True)
+
+

@@ -1,4 +1,4 @@
-from flask import Flask,render_template,url_for,redirect
+from flask import Flask,render_template,url_for,redirect,jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin,login_user,LoginManager,login_required,logout_user
 from flask_bcrypt import Bcrypt
@@ -60,6 +60,8 @@ def login():
             if bcrypt.check_password_hash(user_in.password,form.password.data):
                 login_user(user_in)
                 return redirect('/dashboard')
+                
+           
     
     return render_template('login.html',form=form)
 

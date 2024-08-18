@@ -1,4 +1,4 @@
-from flask import Flask,render_template,url_for,redirect,jsonify
+from flask import Flask,render_template,url_for,redirect,jsonify,flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin,login_user,LoginManager,login_required,logout_user
 from flask_bcrypt import Bcrypt
@@ -33,13 +33,13 @@ class RegisterForm(FlaskForm):
     username=StringField(validators=[InputRequired(),Length(min=4,max=20)],render_kw={"placeholder":"Username"})
     password=PasswordField(validators=[InputRequired(),Length(min=4,max=20)],render_kw={"placeholder":"Password"})
     submit=SubmitField("Submit")
+    def validate_username(form,username):
+        existing_user=User.query.filter_by(username=username.data).first()
 
-def validate_user(self,username):
-    existing_user=User.query.filter_by(username=username.data).first()
-
-    if existing_user:
-        raise ValidationError(
-             "This username already exists")
+        if existing_user:
+            flash("This usernamealready exists",'info')
+            raise ValidationError("This username already exists")
+    
 
 class Login(FlaskForm):
     username=StringField(validators=[InputRequired(),Length(min=4,max=20)],render_kw={'placeholder':'username'})

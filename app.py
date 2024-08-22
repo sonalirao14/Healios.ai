@@ -1,16 +1,18 @@
 from flask import Flask,render_template,url_for,redirect,jsonify,flash
 from flask_sqlalchemy import SQLAlchemy
-from flask_login import UserMixin,login_user,LoginManager,login_required,logout_user
+from flask_login import UserMixin,login_user,LoginManager,login_required,logout_user,current_user
 from flask_bcrypt import Bcrypt
-
+from datetime import datetime
 from flask_wtf import FlaskForm
-from wtforms import StringField,PasswordField,SubmitField
+from wtforms import StringField,PasswordField,SubmitField,TextAreaField
 from wtforms.validators import InputRequired,Length, ValidationError
+from flask_migrate import Migrate
 
 app=Flask(__name__)
 bcrypt=Bcrypt(app)
 app.config['SQLALCHEMY_DATABASE_URI']="sqlite:///test.db"
 app.config["SECRET_KEY"]='thisisasecretkey'
+
 
 login_manager=LoginManager()
 login_manager.init_app(app)
@@ -22,11 +24,19 @@ def load_user(user_id):
 
 
 db=SQLAlchemy(app)
+migrate=Migrate(app,db)
 
 class User(db.Model,UserMixin):
     id=db.Column(db.Integer,primary_key=True)
     username=db.Column(db.String(50),nullable=False,unique=True)
     password=db.Column(db.String(50),nullable=False)
+
+class Bond(db.Model):
+    id=db.Column(db.Integer,primary_key=True)
+    
+    content=db.Column(db.Text,nullable=False)
+    author=db.Column(db.String(80),nullable=False)
+    date_posted=db.Column(db.DateTime,default=datetime.now)
 
 
 class RegisterForm(FlaskForm):
@@ -46,6 +56,11 @@ class Login(FlaskForm):
     password=PasswordField(validators=[InputRequired(),Length(min=4,max=20)],render_kw={'placeholder':'Password'})
 
     submit=SubmitField('Submit')
+
+class Bond_page(FlaskForm):
+    
+    content=TextAreaField("Your views matter a lot",render_kw={'placeholder':'Share your views'})
+    submit=SubmitField("Post your views")
 
 @app.route('/')
 def index():
@@ -84,7 +99,44 @@ def signup():
 @app.route('/dashboard')
 @login_required
 def dashboard():
-    return render_template('dashboard.html')
+    user_logged=current_user
+    return render_template('dashboard.html',user_logged=user_logged)
+
+@app.route('/bond',methods=['POST','GET'])
+@login_required
+def bonding():
+    
+    posts=Bond.query.order_by(Bond.date_posted).all()
+    return render_template("bonding.html",posts=posts)
+
+@app.route('/delete/<int:id>',methods=['GET','POST'])
+@login_required
+def delete_post(id):
+    post=Bond.query.get_or_404(id)
+    if post.author==current_user.username:
+        try:
+            db.session.delete(post)
+            db.session.commit()
+            return redirect(url_for('bonding'))
+        except:
+            return("You cant delete this post")
+        
+    else:
+        return redirect('/dashboard')
+   
+        
+@app.route('/write',methods=['GET','POST'])
+@login_required
+def write():
+    form=Bond_page()
+
+    if form.validate_on_submit():
+        post=Bond(content=form.content.data,author=current_user.username)
+        db.session.add(post)
+        db.session.commit()
+        return redirect(url_for('bonding'))
+    return render_template('write.html',form=form)
+
 
 @app.route('/logout')
 @login_required

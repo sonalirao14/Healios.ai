@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 
+
 <html>
     <head>
         <meta charset="utf-8">
@@ -10,16 +11,19 @@
         <link rel="stylesheet" href="">
     </head>
     <body>
-       <h1>Page for signup</h1>
-       <form method="POST" action="">
-        
-       
+        <h1>This is a bonding page</h1>
+        <form method='POST' action="">
             {{form.hidden_tag()}}
-            {{form.username}}
-            {{form.password}}
-            {{form.submit}}
-      </form>
-      <a href="{{url_for('login')}}">Login</a>
+            <div>
+                {{ form.content.label }}
+                {{ form.content(size=50) }}
+                
+            </div>
+            <div>
+                {{ form.submit() }}
+            </div>
+        </form>
+
         
         <script src="" async defer></script>
     </body>

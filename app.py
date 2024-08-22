@@ -106,7 +106,7 @@ def dashboard():
 @login_required
 def bonding():
     
-    posts=Bond.query.order_by(Bond.date_posted).all()
+    posts=Bond.query.order_by(Bond.date_posted.desc()).all()
     return render_template("bonding.html",posts=posts)
 
 @app.route('/delete/<int:id>',methods=['GET','POST'])
@@ -135,7 +135,8 @@ def write():
         db.session.add(post)
         db.session.commit()
         return redirect(url_for('bonding'))
-    return render_template('write.html',form=form)
+    posts = Bond.query.filter_by(author=current_user.username).order_by(Bond.date_posted.desc()).all()
+    return render_template('write.html',form=form,posts=posts)
 
 
 @app.route('/logout')

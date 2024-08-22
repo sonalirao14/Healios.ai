@@ -12,6 +12,7 @@
     </head>
     <body>
         <h1>This is a bonding page</h1>
+        <a href="{{url_for('bonding')}}" >See what others say</a>
         <form method='POST' action="">
             {{form.hidden_tag()}}
             <div>
@@ -22,7 +23,15 @@
             <div>
                 {{ form.submit() }}
             </div>
+            <a href="{{url_for('dashboard')}}" >Dashboard </a>
         </form>
+        <h1>See what you have posted earlier</h1>
+        {% for post in  posts%}
+        <li><strong>{{post.author}} on  {{ post.date_posted.strftime('%Y-%m-%d %H:%M:%S') }}:</strong></li>
+        <p><strong>{{post.content}}</strong></p>
+        
+        {% endfor %}
+        
 
         
         <script src="" async defer></script>

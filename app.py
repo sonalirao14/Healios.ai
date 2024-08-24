@@ -24,19 +24,23 @@ def load_user(user_id):
 
 
 db=SQLAlchemy(app)
-migrate=Migrate(app,db)
+migrate=Migrate(app,db,render_as_batch=True)
 
 class User(db.Model,UserMixin):
     id=db.Column(db.Integer,primary_key=True)
     username=db.Column(db.String(50),nullable=False,unique=True)
     password=db.Column(db.String(50),nullable=False)
+   
 
 class Bond(db.Model):
     id=db.Column(db.Integer,primary_key=True)
-    
+    title=db.Column(db.String(80))
     content=db.Column(db.Text,nullable=False)
     author=db.Column(db.String(80),nullable=False)
     date_posted=db.Column(db.DateTime,default=datetime.now)
+    tags=db.Column(db.String(200),nullable=False)
+
+
 
 
 class RegisterForm(FlaskForm):
@@ -58,9 +62,12 @@ class Login(FlaskForm):
     submit=SubmitField('Submit')
 
 class Bond_page(FlaskForm):
-    
+    title=StringField(validators=[InputRequired(),Length(min=4,max=20)],render_kw={'placeholder':'Enter Title'})
     content=TextAreaField("Your views matter a lot",render_kw={'placeholder':'Share your views'})
     submit=SubmitField("Post your views")
+    tags=StringField(validators=[InputRequired(),Length(min=4,max=200)],render_kw={'placeholder':'Tags'})
+
+
 
 @app.route('/')
 def index():
@@ -129,13 +136,17 @@ def delete_post(id):
 @login_required
 def write():
     form=Bond_page()
+    
 
     if form.validate_on_submit():
-        post=Bond(content=form.content.data,author=current_user.username)
+        post=Bond(content=form.content.data,author=current_user.username,title=form.title.data,tags=form.tags.data)
         db.session.add(post)
         db.session.commit()
         return redirect(url_for('bonding'))
+    
+
     posts = Bond.query.filter_by(author=current_user.username).order_by(Bond.date_posted.desc()).all()
+    
     return render_template('write.html',form=form,posts=posts)
 
 

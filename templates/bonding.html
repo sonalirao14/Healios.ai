@@ -21,8 +21,8 @@
         <h3>Tags:{{post.tags}}</h3>
         <p><strong>{{post.content}}</strong></p>
         <button><a href="{{ url_for('like_post', id=post.id) }}">Click here to Like</a></button>
-        <button><a href="{{ url_for('delete_post', id=post.id) }}">Click here to delete</a></button>
         <button><a href="{{ url_for('comment', id=post.id) }}">Click here to Comment</a></button>
+        <button><a href="{{ url_for('delete_post', id=post.id) }}">Click here to delete</a></button>
         {% endfor %}
         
 

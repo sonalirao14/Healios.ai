@@ -231,7 +231,7 @@ def like_post(id):
         #except:
             return redirect(url_for('bonding'))
     like_count=Like.query.filter_by(likeID=liked_post.id).count()
-    return render_template('like.html',form=form,like_count=like_count)
+    return render_template('like.html',form=form,like_count=like_count,liked_post=liked_post)
 
 @app.route('/logout')
 @login_required

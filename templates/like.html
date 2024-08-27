@@ -10,11 +10,17 @@
         <link rel="stylesheet" href="">
     </head>
     <body>
+
+        <li><strong>{{liked_post.author}} on  {{ liked_post.date_posted.strftime('%Y-%m-%d %H:%M:%S') }}</strong></li>
+        <h2>{{liked_post.title}}</h2>
+        <h3>Tags:{{liked_post.tags}}</h3>
+        <p><strong>{{liked_post.content}}</strong></p>
         <form method="POST" action=" ">
             {{ form.hidden_tag() }}
             {{ form.submit(class="btn btn-primary") }}
             <span>{{ like_count }} Likes</span>
         </form>
+        <button><a href="{{ url_for('comment', id=liked_post.id) }}">Click here to Comment</a></button>
         
         <script src="" async defer></script>
     </body>

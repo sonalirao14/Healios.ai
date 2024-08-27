@@ -39,6 +39,24 @@ class Bond(db.Model):
     author=db.Column(db.String(80),nullable=False)
     date_posted=db.Column(db.DateTime,default=datetime.now)
     tags=db.Column(db.String(200),nullable=False)
+    
+
+class Comments(db.Model):
+    id=db.Column(db.Integer,primary_key=True)
+    commentID=db.Column(db.Integer)
+    content=db.Column(db.Text,nullable=False)
+    author=db.Column(db.String(80),nullable=False)
+    date_posted=db.Column(db.DateTime,default=datetime.now)
+
+class Like(db.Model):
+    id=db.Column(db.Integer,primary_key=True)
+    likeID=db.Column(db.Integer)
+    author=db.Column(db.String(80),nullable=False)
+    date_posted=db.Column(db.DateTime,default=datetime.now)
+
+    
+    
+  
 
 
 
@@ -67,6 +85,12 @@ class Bond_page(FlaskForm):
     submit=SubmitField("Post your views")
     tags=StringField(validators=[InputRequired(),Length(min=4,max=200)],render_kw={'placeholder':'Tags'})
 
+class CommentForm(FlaskForm):
+    comment=TextAreaField(render_kw={'placeholder':'Comment here'})
+    submit=SubmitField('Post')
+
+class LikeForm(FlaskForm):
+    submit=SubmitField('Like')
 
 
 @app.route('/')
@@ -149,6 +173,65 @@ def write():
     
     return render_template('write.html',form=form,posts=posts)
 
+@app.route('/comment/<int:id>',methods=['GET','POST'])
+@login_required
+def comment(id):
+    post_comment=Bond.query.get_or_404(id)
+    form=CommentForm()
+    if form.validate_on_submit():
+        user_comment=Comments(content=form.comment.data,author=current_user.username,commentID=post_comment.id)
+        db.session.add(user_comment)
+        db.session.commit()
+        return redirect(url_for('bonding'))
+    comments=Comments.query.filter_by(commentID=post_comment.id).order_by(Comments.date_posted.desc()).all()
+    comments_count=Comments.query.filter_by(commentID=post_comment.id).count()
+    return render_template('comment.html',post_comment=post_comment,comments=comments,form=form,comments_count=comments_count)
+
+@app.route('/delete_comment/<int:id>')
+@login_required
+def delete_comment(id):
+    comment_to_delete=Comments.query.get_or_404(id)
+    if comment_to_delete.author==current_user.username:
+        try:
+            db.session.delete(comment_to_delete)
+            db.session.commit()
+            return redirect(url_for('bonding'))
+        except:
+            return("You cant delete this post")
+        
+    else:
+        return redirect('/write')
+    
+@app.route('/like/<int:id>',methods=['GET','POST'])
+@login_required
+def like_post(id):
+    liked_post=Bond.query.get_or_404(id)
+    form=LikeForm()
+    if form.validate_on_submit():
+        # Check if the user already liked this post
+        like = Like.query.filter_by(author=current_user.username, likeID=liked_post.id).first()
+        if like:
+            
+            db.session.delete(like)
+            db.session.commit()
+            flash('You unliked this post.', 'success')
+            return redirect(url_for('bonding'))
+        else:
+            
+            new_like = Like(author=current_user.username, likeID=liked_post.id)
+            db.session.add(new_like)
+            db.session.commit()
+            flash('You liked this post!', 'success')
+
+        #try:
+            #like=Like(likeID=liked_post.id,author=current_user.username)
+            #db.session.add(like)
+            #db.session.commit()
+            #return redirect(url_for('bonding'))
+        #except:
+            return redirect(url_for('bonding'))
+    like_count=Like.query.filter_by(likeID=liked_post.id).count()
+    return render_template('like.html',form=form,like_count=like_count)
 
 @app.route('/logout')
 @login_required

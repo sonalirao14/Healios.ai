@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="">
+    </head>
+    <body>
+        <p>Total Comments: {{comments_count}}</p>
+        <h1>Comment on the post by {{post_comment.author}}</h1>
+        <a href="{{url_for('bonding')}}" >Go back to the feed </a>
+        <a href="{{url_for('dashboard')}}" >Dashboard </a>
+        
+        <li><strong>{{post_comment.author}} on  {{ post_comment.date_posted.strftime('%Y-%m-%d %H:%M:%S') }}</strong></li>
+        <h2>{{post_comment.title}}</h2>
+        <h3>Tags:{{post_comment.tags}}</h3>
+        <p><strong>{{post_comment.content}}</strong></p>
+
+        
+
+        <form method='POST' action="">
+            {{form.hidden_tag()}}
+            <div>
+               
+                {{ form.comment }}
+                
+                
+            </div>
+            <div>
+                {{ form.submit() }}
+            </div>
+
+        {% for comment in  comments%}
+        <li><strong>{{comment.author}} on  {{ comment.date_posted.strftime('%Y-%m-%d %H:%M:%S') }}</strong></li>
+        <h2>{{comment.title}}</h2>
+        
+        <p><strong>{{comment.content}}</strong></p>
+        <a href="{{ url_for('delete_comment', id=comment.id) }}">Click here to delete</a>
+        
+        {% endfor %}
+        
+        <script src="" async defer></script>
+    </body>
+</html>

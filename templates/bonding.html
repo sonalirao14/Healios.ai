@@ -12,6 +12,7 @@
     <body>
         <a href="{{url_for('write')}}">Want to write more about your yourself</a>
         <a href="{{url_for('dashboard')}}" >Dashboard </a>
+        
 
         <h2>Views what people say</h2>
         {% for post in  posts%}
@@ -19,8 +20,11 @@
         <h2>{{post.title}}</h2>
         <h3>Tags:{{post.tags}}</h3>
         <p><strong>{{post.content}}</strong></p>
+        <a href="{{ url_for('like_post', id=post.id) }}">Click here to Like</a>
         <a href="{{ url_for('delete_post', id=post.id) }}">Click here to delete</a>
+        <a href="{{ url_for('comment', id=post.id) }}">Click here to Comment</a>
         {% endfor %}
+        
 
 
     </body>

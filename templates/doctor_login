@@ -10,11 +10,17 @@
         <link rel="stylesheet" href="">
     </head>
     <body>
-       <h1>The logged in content</h1>
-       <a href="{{url_for('logout')}}" >For Logout click here </a>   
-       <a href="{{url_for('write')}}">For posting views click here</a>
-       <a href="{{url_for('doc_list')}}">Doctor List</a>
-       <p>welcome{{user_logged.username}}</p>
+       This is Login page for doctor
+
+       <form method="POST" action="">
+       
+        {{form.hidden_tag()}}
+        {{form.email}}
+        {{form.password}}
+        {{form.submit}}
+   </form>
+   <a href="{{url_for('doctor')}}">Signup for Doctor</a>
+        
         <script src="" async defer></script>
     </body>
 </html>

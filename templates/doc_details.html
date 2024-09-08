@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-
+<
 <html>
     <head>
         <meta charset="utf-8">
@@ -10,11 +10,14 @@
         <link rel="stylesheet" href="">
     </head>
     <body>
-       <h1>The logged in content</h1>
-       <a href="{{url_for('logout')}}" >For Logout click here </a>   
-       <a href="{{url_for('write')}}">For posting views click here</a>
-       <a href="{{url_for('doc_list')}}">Doctor List</a>
-       <p>welcome{{user_logged.username}}</p>
+       <h1>Appointment Sheduling with doctor</h1>
+       <h2>Details</h2>
+       <h2><li><strong>{{doc_to_book.name}} -  {{ doc_to_book.qualifications }}</strong></li></h2>
+            <h2>Specialties:{{doc_to_book.specialties}}</h2>
+            <a href="mailto:{{doc_to_book.email}}">Send Email</a>
+            <p>ML Model for appintment scheduling here itself</p>
+            
+        
         <script src="" async defer></script>
     </body>
 </html>

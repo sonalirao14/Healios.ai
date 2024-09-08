@@ -10,10 +10,20 @@
         <link rel="stylesheet" href="">
     </head>
     <body>
-        <h1>This is the login-signup</h1>
-        <a href="{{url_for('login')}}">Login</a>
-        <a href="{{url_for('signup')}}">For registeration click here</a>
-        <a href="{{url_for('doctor')}}">If you are a doctor, click here</a>
+        <h1>This is doctor authhentication system</h1>
+
+        <form method="POST" action="">
+        
+       
+            {{form.hidden_tag()}}
+            {{form.name}}
+            {{form.email}}
+            {{form.qualifications}}
+            {{form.specialties}}
+            {{form.password}}
+            {{form.submit}}
+      </form>
+      <a href="{{url_for('doc_login')}}">Login here for doctor</a>
         
         <script src="" async defer></script>
     </body>

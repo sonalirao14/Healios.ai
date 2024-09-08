@@ -54,6 +54,14 @@ class Like(db.Model):
     author=db.Column(db.String(80),nullable=False)
     date_posted=db.Column(db.DateTime,default=datetime.now)
 
+class Doctors(db.Model,UserMixin):
+    id=db.Column(db.Integer,primary_key=True)
+    email=db.Column(db.String(50),nullable=False,unique=True)
+    name=db.Column(db.String(50),nullable=False)
+    qualifications=db.Column(db.String(50),nullable=False)
+    specialties=db.Column(db.String(50),nullable=False)
+    password=db.Column(db.String(50),nullable=False)
+
     
     
   
@@ -91,6 +99,26 @@ class CommentForm(FlaskForm):
 
 class LikeForm(FlaskForm):
     submit=SubmitField('Like')
+
+class DoctorDetails(FlaskForm):
+    email=StringField(validators=[InputRequired(),Length(min=4,max=50)],render_kw={"placeholder":"Email"})
+    name=StringField(validators=[InputRequired(),Length(min=4,max=100)],render_kw={"placeholder":"Name"})
+    qualifications=StringField(validators=[InputRequired(),Length(min=4,max=20)],render_kw={"placeholder":"Degrees"})
+    specialties=StringField(validators=[InputRequired(),Length(min=4,max=100)],render_kw={"placeholder":"Specialties"})
+    password=PasswordField(validators=[InputRequired(),Length(min=4,max=20)],render_kw={"placeholder":"Password"})
+    
+    submit=SubmitField("Submit")
+    def validate_username(form,email):
+        existing_doctor=Doctors.query.filter_by(email=email.data).first()
+
+        if existing_doctor:
+            flash("This usernamealready exists",'info')
+            raise ValidationError("This username already exists")
+     
+class doctor_login(FlaskForm):
+    email=StringField(validators=[InputRequired(),Length(min=4,max=50)],render_kw={"placeholder":"Email"})
+    password=PasswordField(validators=[InputRequired(),Length(min=4,max=20)],render_kw={"placeholder":"Password"})
+    submit=SubmitField("Submit")
 
 
 @app.route('/')
@@ -232,6 +260,48 @@ def like_post(id):
             return redirect(url_for('bonding'))
     like_count=Like.query.filter_by(likeID=liked_post.id).count()
     return render_template('like.html',form=form,like_count=like_count,liked_post=liked_post)
+
+@app.route('/doctor',methods=['GET','POST'])
+def doctor():
+    form=DoctorDetails()
+    if form.validate_on_submit():
+        hashed_doctor_pass=bcrypt.generate_password_hash(form.password.data)
+        new_doc=Doctors(password=hashed_doctor_pass,name=form.name.data,email=form.email.data, qualifications=form.qualifications.data,specialties=form.specialties.data)
+        db.session.add(new_doc)
+        db.session.commit()
+        return redirect('/doc_login')
+    return render_template('doctor_signup.html',form=form)
+
+@app.route('/doc_login',methods=['GET','POST'])
+def doc_login():
+    form=doctor_login()
+    if form.validate_on_submit():
+        doctor_in=Doctors.query.filter_by(email=form.email.data).first()
+        if doctor_in:
+            if bcrypt.check_password_hash(doctor_in.password,form.password.data):
+                login_user(doctor_in)
+                return redirect('/doc_page')
+
+    return render_template('doctor_login',form=form)
+
+@app.route('/doc_page',methods=['GET','POST'])
+@login_required
+def doctor_page():
+    doc_logged=current_user
+    return render_template('doc_page.html',doc_logged=doc_logged)
+
+@app.route('/doc_list',methods=['GET','POST'])
+@login_required
+def doc_list():
+    res_doctors=Doctors.query.all()
+    return render_template('doc_list.html',res_doctors=res_doctors)
+
+@app.route('/doc_details/<int:id>',methods=['GET','POST'])
+@login_required
+def consult(id):
+    doc_to_book=Doctors.query.get_or_404(id)
+    return render_template('doc_details.html',doc_to_book=doc_to_book)
+
 
 @app.route('/logout')
 @login_required

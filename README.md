@@ -1,81 +1,66 @@
-# Flask Authentication Application
+# Flask Web Application
 
-This is a simple Flask application that implements user authentication with registration, login, and logout functionalities. It includes features like password hashing, session management, and form validation.
+This project is a Flask-based web application that provides functionalities like user registration, login, creating posts (called "Bonds"), commenting, liking, managing doctors, and more. The application uses SQLite as the database and Flask-WTF for handling forms.
+
+## Table of Contents
+- [Features](#features)
+- [Requirements](#requirements)
+- [Installation](#installation)
+- [Running the Application](#running-the-application)
+- [Project Structure](#project-structure)
+- [Database Models](#database-models)
+- [Form Handling](#form-handling)
+- [Routes](#routes)
+- [Templates](#templates)
+- [Contributing](#contributing)
+- [License](#license)
 
 ## Features
 
-- **User Registration:** Users can create a new account with a unique username and password.
-- **User Login:** Registered users can log in with their credentials.
-- **Protected Dashboard:** Only authenticated users can access the dashboard.
-- **User Logout:** Users can log out from their account.
+- User registration and login
+- Create, read, update, and delete (CRUD) functionality for posts (called "Bonds")
+- Comment on posts
+- Like and unlike posts
+- Doctor registration and login
+- Doctor consultation details
+- Separate login flows for regular users and doctors
 
-## Technologies Used
-
-- **Flask:** Python web framework for developing the application.
-- **Flask-SQLAlchemy:** ORM for managing database operations.
-- **Flask-Login:** Session management for handling user authentication.
-- **Flask-Bcrypt:** Password hashing for securing user passwords.
-- **Flask-WTF:** Form handling and validation.
-
-## Getting Started
-
-### Prerequisites
+## Requirements
 
 - Python 3.x
-- pip (Python package installer)
+- Flask
+- Flask-SQLAlchemy
+- Flask-Login
+- Flask-Bcrypt
+- Flask-Migrate
+- Flask-WTF
+- WTForms
 
-### Installation
+## Installation
 
-1. Clone the repository:
-
-    ```bash
-    git clone https://github.com/yourusername/flask-auth-app.git
-    cd flask-auth-app
-    ```
-
-Set up the SQLite database:
-
-    ```bash
-    python
-    >>> from app import db
-    >>> db.create_all()
-    >>> exit()
-    ```
-
-### Running the Application
-
-1. Start the Flask development server:
-
-    ```bash
-    python app.py
-    ```
-
-2. Open your web browser and go to:
-
-    ```
-    http://127.0.0.1:5000/
-    ```
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/yourusername/your-repository.git
 
 
+Project Structure
 
-### Routes
-
-- **`/`** - Home page, renders `index.html`.
-- **`/login`** - Login page, renders `login.html` and handles login logic.
-- **`/signup`** - Signup page, renders `signup.html` and handles user registration.
-- **`/dashboard`** - Protected dashboard page, accessible only to logged-in users.
-- **`/logout`** - Logout route, logs the user out and redirects to the login page.
-
-### Forms
-
-- **`RegisterForm`** - Handles user registration with validation for username and password.
-- **`LoginForm`** - Handles user login with validation for username and password.
-
-### Database Model
-
-- **`User`** - A model representing a user in the database, with fields for `id`, `username`, and `password`.
-
-### Security
-
-- **Password Hashing:** Passwords are hashed using Flask-Bcrypt before being stored in the database.
-- **Session Management:** User sessions are managed using Flask-Login, ensuring only authenticated users can access certain routes.
+your-repository/
+├── app.py                  # Main application file
+├── requirements.txt        # Python dependencies
+├── templates/              # HTML templates
+│   ├── index.html
+│   ├── login.html
+│   ├── signup.html
+│   ├── dashboard.html
+│   ├── bonding.html
+│   ├── write.html
+│   ├── comment.html
+│   ├── like.html
+│   ├── doctor_signup.html
+│   ├── doctor_login.html
+│   ├── doc_page.html
+│   ├── doc_list.html
+│   └── doc_details.html
+├── static/                 # Static files (CSS, JS, Images)
+└── migrations/             # Database migrations

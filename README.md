@@ -26,10 +26,8 @@ Healios.ai is a [brief description: e.g., "AI-driven healthcare recommendation p
 ## Technologies Used
 
 - **Backend**: Python, Flask
-- **Frontend**: HTML, CSS, JavaScript, React (if applicable)
-- **Database**: PostgreSQL, MongoDB, SQLite (mention the specific one used)
-- **AI/ML**: TensorFlow, PyTorch (if applicable)
-- **APIs**: [List any external APIs used]
+- **Frontend**: HTML, CSS, JavaScript, React 
+- **Database**: SQLite 
 
 ## Installation
 

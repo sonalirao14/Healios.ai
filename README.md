@@ -10,7 +10,6 @@ Welcome to **Healios.ai**, an AI-powered platform designed to [briefly describe 
 - [Installation](#installation)
 - [Usage](#usage)
 - [Contributing](#contributing)
-- [License](#license)
 - [Contact](#contact)
 
 ## Introduction

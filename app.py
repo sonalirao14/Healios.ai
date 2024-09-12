@@ -7,6 +7,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField,PasswordField,SubmitField,TextAreaField
 from wtforms.validators import InputRequired,Length, ValidationError
 from flask_migrate import Migrate
+from flask_cors import CORS
 
 app=Flask(__name__)
 bcrypt=Bcrypt(app)
@@ -25,6 +26,7 @@ def load_user(user_id):
 
 db=SQLAlchemy(app)
 migrate=Migrate(app,db,render_as_batch=True)
+cors=CORS(app)
 
 class User(db.Model,UserMixin):
     id=db.Column(db.Integer,primary_key=True)

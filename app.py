@@ -305,6 +305,10 @@ def consult(id):
     return render_template('doc_details.html',doc_to_book=doc_to_book)
 
 
+@app.route('/video')
+def video():
+    return render_template('video.html')
+
 @app.route('/logout')
 @login_required
 def logout():

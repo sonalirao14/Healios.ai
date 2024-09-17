@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 
 <html>
     <head>
@@ -25,4 +25,66 @@
         
         <script src="" async defer></script>
     </body>
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hospital App - Login & Signup</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Left Section -->
+        <div class="left-section">
+            <h1>Healios AI</h1>
+            <p>AI-Driven Health for a Better Tomorrow
+            </p>
+        </div>
+
+        <!-- Right Section -->
+        <div class="right-section">
+            <!-- Login Form -->
+            <div id="login-form" class="form-section">
+                <h2>Please Enter the following details </h2>
+                <form action="dashboard.html" method="POST">
+                    <input type="text" placeholder="Username" required>
+                    <input type="password" placeholder="Password" required>
+                    <button type="submit">Sign In</button>
+                </form>
+                <p class="toggle-text">Don't have an account? <a href="#" onclick="showSignup()">Create a New Account</a></p>
+                <button class="doctor-button">If Doctor, Click Here</button>
+            </div>
+
+            <!-- Signup Form -->
+            <div id="signup-form" class="form-section" style="display: none;">
+                <h2>Welcome!</h2>
+                <p>Create your Account!</p>
+                <form action="welcome.html" method="POST">
+                    <input type="text" placeholder="Username" required>
+                    <input type="email" placeholder="Email" required>
+                    <input type="password" placeholder="Password" required>
+                    <button type="submit">Sign Up</button>
+                </form>
+                <p class="toggle-text">Already have an account? <a href="#" onclick="showLogin()">Sign In</a></p>
+                <button class="doctor-button">If Doctor, Click Here</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // JavaScript to toggle between login and signup forms
+        function showSignup() {
+            document.getElementById('login-form').style.display = 'none';
+            document.getElementById('signup-form').style.display = 'block';
+        }
+
+        function showLogin() {
+            document.getElementById('signup-form').style.display = 'none';
+            document.getElementById('login-form').style.display = 'block';
+        }
+    </script>
+</body>
 </html>

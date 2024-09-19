@@ -21,8 +21,8 @@
             <p>Create your Account!</p>
             <form method="POST" action="{{ url_for('signup') }}">
                 {{ form.hidden_tag() }}
-                {{ form.username(class_='username') (class_='username')}}
-                {{ form.password(class_='pass') (class_='pass')}}
+                {{ form.username(class_='username')}}
+                {{ form.password(class_='pass')}}
                 {{ form.submit }}
             </form>
             <p class="toggle-text">Already have an account? <a href="{{ url_for('login') }}">Sign In</a></p>

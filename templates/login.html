@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 
 <html>
     <head>
@@ -25,4 +25,38 @@
         
         <script src="" async defer></script>
     </body>
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Healios AI</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Left Section -->
+        <div class="left-section">
+            <h1>Healios AI</h1>
+            <p>AI-Driven Health for a Better Tomorrow</p>
+        </div>
+
+        <!-- Right Section -->
+        <div class="right-section">
+            <h2>Please Enter the following details</h2>
+            <form method="POST" action=" ">
+                {{ form.hidden_tag() }}
+                {{ form.username(class_='log_username') }}
+                {{ form.password (class_='log_pass') }}
+                {{ form.submit }}
+            </form>
+            <p class="toggle-text">Don't have an account? <a href="{{ url_for('signup') }}">Create a New Account</a></p>
+            <a class="doctor-button" href="{{ url_for('doc_login') }}">If Doctor, Click Here</a>
+        </div>
+    </div>
+</body>
 </html>
+

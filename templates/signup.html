@@ -1,27 +1,33 @@
 <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signup - Healios AI</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Left Section -->
+        <div class="left-section">
+            <h1>Healios AI</h1>
+            <p>AI-Driven Health for a Better Tomorrow</p>
+        </div>
 
-<html>
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title></title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="">
-    </head>
-    <body>
-       <h1>Page for signup</h1>
-       <form method="POST" action="">
-        
-       
-            {{form.hidden_tag()}}
-            {{form.username}}
-            {{form.password}}
-            {{form.submit}}
-      </form>
-      <a href="{{url_for('login')}}">Login</a>
-      <a href="{{url_for('doctor')}}">If you are a doctor signup here</a>
-        
-        <script src="" async defer></script>
-    </body>
+        <!-- Right Section -->
+        <div class="right-section">
+            <h2>Welcome!</h2>
+            <p>Create your Account!</p>
+            <form method="POST" action="{{ url_for('signup') }}">
+                {{ form.hidden_tag() }}
+                {{ form.username(class_='username') }}
+                {{ form.password(class_='pass') }}
+                {{ form.submit }}
+            </form>
+            <p class="toggle-text">Already have an account? <a href="{{ url_for('login') }}">Sign In</a></p>
+            <a class="doctor-button" href="{{ url_for('doc_login') }}">If Doctor, Click Here</a>
+        </div>
+    </div>
+</body>
 </html>

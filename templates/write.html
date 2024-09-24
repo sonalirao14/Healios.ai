@@ -1,45 +1,52 @@
 <!DOCTYPE html>
-
-
-<html>
+<html lang="en">
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title></title>
+        <title>Bonding Page</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="">
+        <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='style.css') }}">
     </head>
-    <body>
-        <h1>This is a bonding page</h1>
-        <a href="{{url_for('bonding')}}" >See what others say</a>
-        <form method='POST' action="">
-            {{form.hidden_tag()}}
-            <div>
-               
-                {{ form.content.label }}
-                {{ form.content(size=50) }}
-                {{form.title}}
-                {{ form.tags(size=32) }}
-                
-            </div>
-            <div>
-                {{ form.submit() }}
-            </div>
-            <a href="{{url_for('dashboard')}}" >Dashboard </a>
-        </form>
-        <h1>See what you have posted earlier</h1>
-        {% for post in  posts%}
-        <li><strong>{{post.author}} on  {{ post.date_posted.strftime('%Y-%m-%d %H:%M:%S') }}</strong></li>
-        <h2>{{post.title}}</h2>
-        <h3>Tags:{{post.tags}}</h3>
-        <p><strong>{{post.content}}</strong></p>
+    <body class="bonding-body">
+        <header>
+            <h1 class="main-heading">This is a Bonding Page</h1>
+            <a href="{{url_for('bonding')}}" class="link">See what others say</a>
+        </header>
         
-        {% endfor %}
+        <section class="form-section">
+            <form method="POST" action="">
+                {{ form.hidden_tag() }}
+                <div class="form-group">
+                    <label class="form-label">{{ form.content.label }}</label>
+                    {{ form.content(size=50, class_="form-input") }}
+                </div>
+                <div class="form-group">
+                    {{ form.title(class_="form-input") }}
+                </div>
+                <div class="form-group">
+                    {{ form.tags(size=32, class_="form-input") }}
+                </div>
+                <div class="form-group">
+                    {{ form.submit(class_="form-submit-btn") }}
+                </div>
+            </form>
+            <a href="{{url_for('dashboard')}}" class="link">Dashboard</a>
+        </section>
 
-        
-        
-
+        <section class="posts-section">
+            <h1 class="sub-heading">See What You Have Posted Earlier</h1>
+            <ul class="post-list">
+                {% for post in posts %}
+                <li class="post-item">
+                    <strong>{{ post.author }} on {{ post.date_posted.strftime('%Y-%m-%d %H:%M:%S') }}</strong>
+                    <h2 class="post-title">{{ post.title }}</h2>
+                    <h3 class="post-tags">Tags: {{ post.tags }}</h3>
+                    <p class="post-content"><strong>{{ post.content }}</strong></p>
+                </li>
+                {% endfor %}
+            </ul>
+        </section>
         
         <script src="" async defer></script>
     </body>

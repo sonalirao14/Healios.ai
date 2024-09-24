@@ -306,6 +306,7 @@ def consult(id):
 
 
 @app.route('/video')
+@login_required
 def video():
     return render_template('video.html')
 

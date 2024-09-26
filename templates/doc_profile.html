@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="">
+    </head>
+    <body>
+        <a href="{{url_for('doctor_page')}}">Doctor Dashboard </a> 
+        This is a Doctor Profile Page
+        <h3>Name:{{doc_profile.name}}</h3>
+        <h3>Email:{{doc_profile.email}}</h3>
+        <h3>Qualification:{{doc_profile.qualifications}}</h3>
+        <h3>Specialties:{{doc_profile.specialties}}</h3>
+        <button><a href="{{ url_for('description', id=doc_profile.id) }}">Click here for writing description</a></button>
+        
+        <script src="" async defer></script>
+    </body>
+</html>

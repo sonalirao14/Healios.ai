@@ -63,6 +63,7 @@ class Doctors(db.Model,UserMixin):
     qualifications=db.Column(db.String(50),nullable=False)
     specialties=db.Column(db.String(50),nullable=False)
     password=db.Column(db.String(50),nullable=False)
+    
 
     
     
@@ -121,6 +122,10 @@ class doctor_login(FlaskForm):
     email=StringField(validators=[InputRequired(),Length(min=4,max=50)],render_kw={"placeholder":"Email"})
     password=PasswordField(validators=[InputRequired(),Length(min=4,max=20)],render_kw={"placeholder":"Password"})
     submit=SubmitField("Submit")
+
+class DescriptionForm(FlaskForm):
+    description = TextAreaField('Description', render_kw={'placeholder': 'Write your description here...'})
+    submit = SubmitField('Submit')
 
 
 @app.route('/')
@@ -292,6 +297,12 @@ def doctor_page():
     doc_logged=current_user
     return render_template('doc_page.html',doc_logged=doc_logged)
 
+@app.route('/doc_profile',methods=['GET','POST'])
+@login_required
+def doc_profile():
+    doc_profile=current_user
+    return render_template('doc_profile.html',doc_profile=doc_profile)
+
 @app.route('/doc_list',methods=['GET','POST'])
 @login_required
 def doc_list():
@@ -303,6 +314,16 @@ def doc_list():
 def consult(id):
     doc_to_book=Doctors.query.get_or_404(id)
     return render_template('doc_details.html',doc_to_book=doc_to_book)
+
+@app.route('/description/<int:id>',methods=['GET','POST'])
+@login_required
+def description(id):
+    doc_des=Doctors.query.get_or_404(id)
+    form=DescriptionForm()
+    if form.validate_on_submit():
+        doc_des.description=form.description.data
+        db.session.commit()
+    return render_template('description.html',form=form)
 
 
 @app.route('/video')

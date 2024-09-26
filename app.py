@@ -289,7 +289,7 @@ def doc_login():
                 login_user(doctor_in)
                 return redirect('/doc_page')
 
-    return render_template('doctor_login',form=form)
+    return render_template('doctor_login.html',form=form)
 
 @app.route('/doc_page',methods=['GET','POST'])
 @login_required

@@ -1,32 +1,3 @@
-<!-- <!DOCTYPE html>
-
-<html>
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title></title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="">
-    </head>
-    <body>
-       <h1>Page for Login</h1>
-
-       <form method="POST" action="">
-       
-            {{form.hidden_tag()}}
-            {{form.username(class_='log_username')}}
-            {{form.password(class_='log_pass')}}
-            {{form.submit}}
-       </form>
-       <a href="{{url_for('signup')}}">If new user click here</a>
-       <a href="{{url_for('doc_login')}}">If doctor, Click here for login</a>
-       
-        
-        <script src="" async defer></script>
-    </body>
-</html> -->
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -34,7 +5,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Healios AI</title>
-    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='style.css') }}">
+
+    <link rel="stylesheet" type= "text/css" href= "/Healios.ai/static/style.css">
+
 </head>
 <body>
     <div class="container">

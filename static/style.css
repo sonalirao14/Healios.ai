@@ -25,7 +25,7 @@ body {
 .left-section {
     width: 65%;
     background-color: #e3eaf6;
-    background-image: url(docter.png);
+    background-image: url(./images/docter.png);
     background-color: rgba(255, 255, 255, 0.6); 
     background-blend-mode: lighten; 
     display: flex;
@@ -69,10 +69,6 @@ body {
     margin-bottom: 20px;
 }
 
-.social-icons img {
-    width: 30px;
-    margin: 0 10px;
-}
 
 form {
     display: flex;

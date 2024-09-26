@@ -1,20 +1,252 @@
 <!DOCTYPE html>
 
-<html>
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title></title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="">
-    </head>
-    <body>
-        <h1>This is the login-signup</h1>
-        <a href="{{url_for('login')}}">Login</a>
-        <a href="{{url_for('signup')}}">For registeration click here</a>
-        <a href="{{url_for('doctor')}}">If you are a doctor, click here</a>
-        
-        <script src="" async defer></script>
-    </body>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Healios.ai - Login/Signup</title>
+    <meta
+      name="description"
+      content="Healios.ai - A platform for doctors and patients"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <style>
+      /* Basic styling */
+      body {
+        font-family: "Roboto", sans-serif;
+        background-image: url("/Healios.ai/static/images/indexpagepic.png"); 
+        background-size: cover;
+        background-position: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        margin: 0;
+        text-align: center;
+        color: #0eae69;
+        backdrop-filter: blur(3px);
+        overflow: hidden;
+      }
+
+      /* Text animation container */
+      h1 {
+        font-size: 4em;
+        font-family:Georgia, 'Times New Roman', Times, serif;
+        color: #a8d635;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        margin: 0;
+        display: flex;
+        justify-content: center;
+        animation: fadeIn 2s ease-in-out;
+      }
+
+      /* Animation for individual letters */
+      h1 span {
+        display: inline-block;
+        opacity: 0;
+        animation: fadeLetter 0.8s forwards;
+        text-shadow: 4px 4px 4px rgba(37, 37, 38, 0.8);
+        background: linear-gradient(
+          to right,
+          #b3eaed,
+          #228a90
+          #008E97
+        );
+        -webkit-text-fill-color:#4adbad;
+        -webkit-background-clip: text;
+      }
+
+      /* Delays for "Welcome" */
+      h1 span:nth-child(1) {
+        animation-delay: 0.1s;
+      } /* W */
+      h1 span:nth-child(2) {
+        animation-delay: 0.2s;
+      } /* e */
+      h1 span:nth-child(3) {
+        animation-delay: 0.3s;
+      } /* l */
+      h1 span:nth-child(4) {
+        animation-delay: 0.4s;
+      } /* c */
+      h1 span:nth-child(5) {
+        animation-delay: 0.5s;
+      } /* o */
+      h1 span:nth-child(6) {
+        animation-delay: 0.6s;
+      } /* m */
+      h1 span:nth-child(7) {
+        animation-delay: 0.7s;
+      } /* e */
+
+      /* Delays for "to" */
+      h1 span:nth-child(8) {
+        animation-delay: 0.8s;
+      } /* space */
+      h1 span:nth-child(9) {
+        animation-delay: 0.9s;
+      } /* t */
+      h1 span:nth-child(10) {
+        animation-delay: 1s;
+      } /* o */
+
+      /* Delays for "Healios.ai" */
+      h1 span:nth-child(11) {
+        animation-delay: 1.2s;
+      } /* space */
+      h1 span:nth-child(12) {
+        animation-delay: 1.3s;
+      } /* H */
+      h1 span:nth-child(13) {
+        animation-delay: 1.4s;
+      } /* e */
+      h1 span:nth-child(14) {
+        animation-delay: 1.5s;
+      } /* a */
+      h1 span:nth-child(15) {
+        animation-delay: 1.6s;
+      } /* l */
+      h1 span:nth-child(16) {
+        animation-delay: 1.7s;
+      } /* i */
+      h1 span:nth-child(17) {
+        animation-delay: 1.8s;
+      } /* o */
+      h1 span:nth-child(18) {
+        animation-delay: 1.9s;
+      } /* s */
+      h1 span:nth-child(19) {
+        animation-delay: 2s;
+      } /* . */
+      h1 span:nth-child(20) {
+        animation-delay: 2.1s;
+      } /* a */
+      h1 span:nth-child(21) {
+        animation-delay: 2.2s;
+      } /* i */
+
+      /* Keyframes for the fade-in effect */
+      @keyframes fadeLetter {
+        0% {
+          opacity: 0;
+          transform: translateY(-20px);
+        }
+        100% {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* Highlight message styling */
+      .highlight {
+        font-family:'Arial Narrow', Arial, sans-serif;
+        font-size: 1.8em;
+        font-weight:100;
+        color: #a6f61d;
+        text-shadow: 2px 2px 4px rgba(10, 10, 10, 0.8);
+        margin-bottom: 20px;
+        opacity: 0;
+        animation: fadeInHighlight 1s ease-in-out forwards;
+        animation-delay: 3s; /* This ensures it appears after "Welcome to Healios.ai" */
+        z-index: 1; /* Make sure this appears on top */
+        position: relative; /* Ensure the highlight text appears properly */
+      }
+
+      @keyframes fadeInHighlight {
+        0% {
+          opacity: 0;
+        }
+        100% {
+          opacity: 1;
+        }
+      }
+
+      /* Glowing effect for the text */
+      @keyframes glow {
+        from {
+          text-shadow: 0 0 10px #00e1ff, 0 0 20px #00e1ff, 0 0 30px #00e1ff;
+        }
+        to {
+          text-shadow: 0 0 20px #00e1ff, 0 0 30px #00e1ff, 0 0 40px #00e1ff;
+        }
+      }
+
+      .button {
+        display: inline-block;
+        margin: 5px 10px;
+        text-decoration: none;
+        font-size: 1.2em;
+        padding: 10px 20px;
+        color: #f3efee;
+        border: 2px solid #48e8cd;
+        border-radius: 5px;
+        transition: background-color 0.3s, transform 0.3s;
+      }
+      .button2 {
+        display: inline-block;
+        margin: 1px 1px;
+        text-decoration: none;
+        font-size: 1.2em;
+        padding: 10px 50px;
+        color: #ffffff;
+        border: 2px solid #fff;
+        border-radius: 5px;
+        transition: background-color 0.3s, transform 0.3s;
+      }
+
+      .button:hover {
+        background-color: #13304e;
+        color: #fff;
+        transform: translateY(-3px);
+      }
+      .button2:hover {
+        background-color: #fff;
+        color: #08879b;
+        transform: translateY(-3px);
+      }
+
+      .link-container {
+        margin-top: 30px;
+      }
+
+      /* Add subtle moving background effect */
+      body:before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: -1;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>
+      <!-- Wrapping each letter in a span to animate them one by one -->
+      <span>W</span><span>e</span><span>l</span><span>c</span><span>o</span
+      ><span>m</span><span>e</span> <span>&nbsp;</span>
+      <!-- For space between words -->
+      <span>t</span><span>o</span>
+      <span>&nbsp;</span>
+      <span>H</span><span>e</span><span>a</span><span>l</span><span>i</span
+      ><span>o</span><span>s</span><span>.</span><span>a</span><span>i</span>
+    </h1>
+
+    <p class="highlight">We are here to help you!</p>
+
+    <div class="link-container">
+      <a href="{{url_for('login')}}" class="button">Sign In</a>
+      <a href="{{url_for('signup')}}" class="button">Sign Up</a>
+    </div>
+    <div class="link-container">
+      <a href="{{url_for('doctor')}}" class="button2">Doctor Login</a>
+    </div>
+
+    <script src="" async defer></script>
+  </body>
 </html>

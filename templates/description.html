@@ -10,12 +10,14 @@
         <link rel="stylesheet" href="">
     </head>
     <body>
+        <a href="{{url_for('doctor_page')}}">Doctor Dashboard </a> 
         <h1>This is a description page for Doctor</h1>
         <form method="POST" action=" ">
             {{ form.hidden_tag() }}
             {{ form.description }}
             {{ form.submit }}
         </form>
+        <p>description:{{doc_des.description}}</p>
         
         <script src="" async defer></script>
     </body>

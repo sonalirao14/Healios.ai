@@ -4,12 +4,6 @@ from utils import handle_user_message
 
 app = Flask(__name__)
 
-@app.route('/')
-def home():
-    """Welcome message for the NP data API."""
-    return "Welcome to the NP data API!"
-
-
 @app.route('/chatbot', methods=['POST'])
 def chatbot_api():
     user_message = request.get_json()['message']

@@ -56,13 +56,15 @@ class Like(db.Model):
     author=db.Column(db.String(80),nullable=False)
     date_posted=db.Column(db.DateTime,default=datetime.now)
 
-class Doctors(db.Model,UserMixin):
+class Docs(db.Model,UserMixin):
     id=db.Column(db.Integer,primary_key=True)
     email=db.Column(db.String(50),nullable=False,unique=True)
     name=db.Column(db.String(50),nullable=False)
     qualifications=db.Column(db.String(50),nullable=False)
     specialties=db.Column(db.String(50),nullable=False)
     password=db.Column(db.String(50),nullable=False)
+    description=db.Column(db.Text,nullable=True)
+    
 
     
     
@@ -111,7 +113,7 @@ class DoctorDetails(FlaskForm):
     
     submit=SubmitField("Submit")
     def validate_username(form,email):
-        existing_doctor=Doctors.query.filter_by(email=email.data).first()
+        existing_doctor=Docs.query.filter_by(email=email.data).first()
 
         if existing_doctor:
             flash("This usernamealready exists",'info')
@@ -121,6 +123,10 @@ class doctor_login(FlaskForm):
     email=StringField(validators=[InputRequired(),Length(min=4,max=50)],render_kw={"placeholder":"Email"})
     password=PasswordField(validators=[InputRequired(),Length(min=4,max=20)],render_kw={"placeholder":"Password"})
     submit=SubmitField("Submit")
+
+class DescriptionForm(FlaskForm):
+    description = TextAreaField('Description', render_kw={'placeholder': 'Write your description here...'})
+    submit = SubmitField('Submit')
 
 
 @app.route('/')
@@ -268,7 +274,7 @@ def doctor():
     form=DoctorDetails()
     if form.validate_on_submit():
         hashed_doctor_pass=bcrypt.generate_password_hash(form.password.data)
-        new_doc=Doctors(password=hashed_doctor_pass,name=form.name.data,email=form.email.data, qualifications=form.qualifications.data,specialties=form.specialties.data)
+        new_doc=Docs(password=hashed_doctor_pass,name=form.name.data,email=form.email.data, qualifications=form.qualifications.data,specialties=form.specialties.data)
         db.session.add(new_doc)
         db.session.commit()
         return redirect('/doc_login')
@@ -278,13 +284,13 @@ def doctor():
 def doc_login():
     form=doctor_login()
     if form.validate_on_submit():
-        doctor_in=Doctors.query.filter_by(email=form.email.data).first()
+        doctor_in=Docs.query.filter_by(email=form.email.data).first()
         if doctor_in:
             if bcrypt.check_password_hash(doctor_in.password,form.password.data):
                 login_user(doctor_in)
                 return redirect('/doc_page')
 
-    return render_template('doctor_login',form=form)
+    return render_template('doctor_login.html',form=form)
 
 @app.route('/doc_page',methods=['GET','POST'])
 @login_required
@@ -292,17 +298,33 @@ def doctor_page():
     doc_logged=current_user
     return render_template('doc_page.html',doc_logged=doc_logged)
 
+@app.route('/doc_profile',methods=['GET','POST'])
+@login_required
+def doc_profile():
+    doc_profile=current_user
+    return render_template('doc_profile.html',doc_profile=doc_profile)
+
 @app.route('/doc_list',methods=['GET','POST'])
 @login_required
 def doc_list():
-    res_doctors=Doctors.query.all()
+    res_doctors=Docs.query.all()
     return render_template('doc_list.html',res_doctors=res_doctors)
 
 @app.route('/doc_details/<int:id>',methods=['GET','POST'])
 @login_required
 def consult(id):
-    doc_to_book=Doctors.query.get_or_404(id)
+    doc_to_book=Docs.query.get_or_404(id)
     return render_template('doc_details.html',doc_to_book=doc_to_book)
+
+@app.route('/description/<int:id>',methods=['GET','POST'])
+@login_required
+def description(id):
+    doc_des=Docs.query.get_or_404(id)
+    form=DescriptionForm()
+    if form.validate_on_submit():
+        doc_des.description=form.description.data
+        db.session.commit()
+    return render_template('description.html',form=form,doc_des=doc_des)
 
 
 @app.route('/video')
@@ -318,6 +340,6 @@ def logout():
 
 
 if __name__=='__main__':
-    app.run(debug=True)
+    app.run(port=5000,debug=True, host='0.0.0.0')
 
 

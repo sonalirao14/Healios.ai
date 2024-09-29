@@ -1,17 +1,12 @@
 <!DOCTYPE html>
-
 <html>
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title></title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="">
-         <!-- Google Fonts -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Doctor Registration</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
-
-    <!-- CSS Styling -->
     <style>
         * {
             margin: 0;
@@ -28,6 +23,7 @@
             position: relative;
             overflow: hidden;
         }
+
         body::before {
             content: "";
             position: absolute;
@@ -35,24 +31,25 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background-image: url('/static/images/doc_login.png');
-            /* background-size: cover; */
-            background-position: center;
-            filter: blur(5px); /* Blur effect */
-            z-index: -1; /* Ensures the blur is behind the form */
+            background-image: url('/Healios.ai/static/images/doc_signup.jpg');
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-size: cover;
+            filter: blur(5px);
+            z-index: -1;
         }
 
         .doc {
-            background-color: rgba(255, 255, 255, 0.95);
-            padding: 3rem;
+            background-color: rgba(239, 249, 251, 0.95);
+            padding: 2rem;
             border-radius: 15px;
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
             width: 100%;
-            max-width: 500px;
+            max-width: 600px;
             text-align: center;
             animation: fadeIn 1s ease-in-out;
             position: relative;
-            z-index: 1; 
+            z-index: 1;
         }
 
         @keyframes fadeIn {
@@ -61,13 +58,11 @@
         }
 
         h1 {
-    color: #33f8bd;
-    border-color: #8bd274; 
-    font-size: 0.9 rem;
-    margin-bottom: 1.5rem;
-    text-shadow: 2px 2px 4px rgba(1, 0.5, 0.5, 2); 
-}
-
+            color: #336ef8;
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(76, 73, 73, 0.5);
+        }
 
         form {
             display: flex;
@@ -77,8 +72,8 @@
 
         input {
             width: 100%;
-            padding: 1.2rem;
-            margin-bottom: 1.5rem;
+            padding: 0.8rem;
+            margin-bottom: 1rem;
             border: 1px solid #ddd;
             border-radius: 8px;
             font-size: 1rem;
@@ -93,30 +88,11 @@
             outline: none;
         }
 
-        /* button {
-            width: 100%;
-            padding: 1rem;
-            background-color: #66a6ff;
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 1.1rem;
-            cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.3s ease;
-        }
-
-        button:hover {
-            background-color: #55cc7f;
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(85, 122, 204, 0.4);
-        } */
-
         .button {
             display: inline-block;
-            margin-top: 20px;
-            padding: 12px 20px;
-            background-color: #33f8bd;
-            /* background-color: #66a6ff; */
+            margin-top: 10px;
+            padding: 9px 15px;
+            background-color: #4694ee;
             color: rgb(20, 19, 19);
             font-size: 1rem;
             border-radius: 8px;
@@ -125,30 +101,83 @@
         }
 
         .button:hover {
-            background-color: #66a6ff;
+            background-color: #ea3030;
             transform: translateY(-3px);
-            box-shadow: 2px 2px 4px rgba(1, 0.5, 0.5, 2);
-            color:white;
+            box-shadow: 2px 2px 4px rgba(1, 0.5, 0.5, 0.5);
+            color: white;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .doc {
+                max-width: 80%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                justify-content: center; /* Center form for tablets */
+            }
+
+            .doc {
+                max-width: 90%;
+                padding: 1.5rem;
+            }
+
+            h1 {
+                font-size: 1.2rem;
+            }
+
+            input {
+                padding: 0.6rem;
+            }
+
+            .button {
+                padding: 8px 12px;
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body::before{
+                background-image: url(/Healios.ai/static/images/doc_signup2.jpg);
+            }
+            .doc {
+                max-width: 95%;
+                padding: 1.2rem;
+             
+            }
+
+            h1 {
+                font-size: 1.1rem;
+            }
+
+            input {
+                padding: 0.5rem;
+                font-size: 0.9rem;
+            }
+
+            .button {
+                padding: 6px 10px;
+                font-size: 0.8rem;
+            }
         }
     </style>
-    </head>
-    <body>
-        <div class="doc">
-        <h1>Please Complete the details</h1>
-
+</head>
+<body>
+    <div class="doc">
+        <h1>Please Complete the Details</h1>
         <form method="POST" action="">
-        
-       
-            {{form.hidden_tag()}}
-            {{form.name}}
-            {{form.email}}
-            {{form.qualifications}}
-            {{form.specialties}}
-            {{form.password}}
-            {{form.submit}}
-      </form> 
-      <a href="{{url_for('doc_login')}}" class="button">Login here for doctor</a>
+            {{ form.hidden_tag() }}
+            {{ form.name }}
+            {{ form.email }}
+            {{ form.qualifications }}
+            {{ form.specialties }}
+            {{ form.password }}
+            {{ form.submit }}
+        </form> 
+        <a href="{{ url_for('doc_login') }}" class="button">Login</a>
     </div>
-        <script src="" async defer></script>
-    </body>
+    <script src="" async defer></script>
+</body>
 </html>

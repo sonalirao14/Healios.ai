@@ -1,53 +1,279 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>Bonding Page</title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='style.css') }}">
-    </head>
-    <body class="bonding-body">
-        <header>
-            <h1 class="main-heading">This is a Bonding Page</h1>
-            <a href="{{url_for('bonding')}}" class="link">See what others say</a>
-        </header>
-        
-        <section class="form-section">
-            <form method="POST" action="">
-                {{ form.hidden_tag() }}
-                <div class="form-group">
-                    <label class="form-label">{{ form.content.label }}</label>
-                    {{ form.content(size=50, class_="form-input") }}
-                </div>
-                <div class="form-group">
-                    {{ form.title(class_="form-input") }}
-                </div>
-                <div class="form-group">
-                    {{ form.tags(size=32, class_="form-input") }}
-                </div>
-                <div class="form-group">
-                    {{ form.submit(class_="form-submit-btn") }}
-                </div>
-            </form>
-            <a href="{{url_for('dashboard')}}" class="link">Dashboard</a>
-        </section>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Doctor's Bonding Hub</title>
+    <meta name="description" content="A platform for doctors to share experiences and bond">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        /* Define the base theme colors */
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2ecc71;
+            --background-color: #f4f7f9;
+            --text-color: #2d2727;
+            --border-color: #e0e0e0;
+            --header-bg-color: #edeef2;
+        }
 
-        <section class="posts-section">
-            <h1 class="sub-heading">See What You Have Posted Earlier</h1>
-            <ul class="post-list">
-                {% for post in posts %}
-                <li class="post-item">
-                    <strong>{{ post.author }} on {{ post.date_posted.strftime('%Y-%m-%d %H:%M:%S') }}</strong>
-                    <h2 class="post-title">{{ post.title }}</h2>
-                    <h3 class="post-tags">Tags: {{ post.tags }}</h3>
-                    <p class="post-content"><strong>{{ post.content }}</strong></p>
-                </li>
-                {% endfor %}
-            </ul>
-        </section>
-        
-        <script src="" async defer></script>
-    </body>
+        /* Base styles for the body */
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--background-color);
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Container settings */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header settings */
+        header {
+            background-color: var(--header-bg-color);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 10px 0;
+            margin-bottom: 20px;
+            position: sticky; /* Stick the header */
+            top: 0;
+            z-index: 1000;
+        }
+
+        /* Main heading styles */
+        .main-heading {
+            font-size: 2em;
+            margin: 0;
+            text-align: center;
+        }
+
+        /* Navigation link styles */
+        .nav-links {
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        /* Style individual navigation links */
+        .link {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: #fff;
+            padding: 8px 15px;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 0 8px;
+            font-size: 14px;
+        }
+
+        /* Content wrapper to manage layout */
+        .content-wrapper {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap; /* Wrap the content in smaller screens */
+        }
+
+        /* Form section styles */
+        .form-section, .posts-section {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            flex: 1;
+            min-width: 280px; /* Ensure the sections don't get too small */
+        }
+
+        /* Form group styles */
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        /* Label styles for form fields */
+        .form-label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        /* Input field styles */
+        .form-input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            font-size: 16px;
+            box-sizing: border-box; /* Ensure proper padding */
+        }
+
+        /* Submit button styles */
+        .form-submit-btn {
+            background-color: var(--secondary-color);
+            color: #fff;
+            border: none;
+            padding: 12px 24px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 16px;
+            width: 100%;
+        }
+
+        /* Sub-heading styles */
+        .sub-heading {
+            color: var(--primary-color);
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 10px;
+        }
+
+        /* Styles for the posts list */
+        .post-list {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        /* Individual post item styles */
+        .post-item {
+            background-color: #f9f9f9;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        /* Post meta information styles */
+        .post-meta {
+            font-size: 0.9em;
+            color: #777;
+            margin-bottom: 5px;
+        }
+
+        /* Post title styles */
+        .post-title {
+            color: var(--primary-color);
+            margin: 10px 0;
+        }
+
+        /* Post tags styles */
+        .post-tags {
+            color: var(--secondary-color);
+            font-size: 0.9em;
+            margin-bottom: 10px;
+        }
+
+        /* Post content styles */
+        .post-content {
+            margin-top: 10px;
+            line-height: 1.6;
+        }
+
+        /* Responsive adjustments for mobile screens */
+        @media (max-width: 768px) {
+            header {
+                padding: 15px 0;
+            }
+
+            .main-heading {
+                font-size: 1.8em;
+            }
+
+            .nav-links {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .link {
+                margin: 5px 10px; /* Adjust link spacing for smaller screens */
+            }
+
+            .content-wrapper {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .form-section, .posts-section {
+                width: 100%; /* Full width for each section */
+                padding: 15px; /* Reduce padding */
+            }
+
+            .form-input {
+                padding: 10px; /* Ensure consistency */
+                font-size: 14px; /* Adjust font size */
+            }
+
+            .form-submit-btn {
+                padding: 10px 20px; /* Adjust button size */
+                font-size: 14px;
+            }
+
+            .post-item {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header section -->
+    <header>
+        <div class="container">
+            <h1 class="main-heading">🏥 Doctor's Bonding Hub</h1>
+            <nav class="nav-links">
+                <a href="{{url_for('bonding')}}" class="link">See what others say</a>
+                <a href="{{url_for('dashboard')}}" class="link">Dashboard</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main content section -->
+    <main class="container">
+        <div class="content-wrapper">
+            <!-- Form section for adding new posts -->
+            <section class="form-section">
+                <h2 class="sub-heading">Share Your Thoughts</h2>
+                <form method="POST" action="">
+                    {{ form.hidden_tag() }}
+                    <div class="form-group">
+                        <label class="form-label" for="title">Title</label>
+                        {{ form.title(id="title", class_="form-input", placeholder="Enter post title") }}
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="content">Content</label>
+                        {{ form.content(id="content", rows=4, class_="form-input", placeholder="Share your thoughts, experiences, or medical insights...") }}
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="tags">Tags</label>
+                        {{ form.tags(id="tags", class_="form-input", placeholder="Enter tags (comma-separated)") }}
+                    </div>
+                    <div class="form-group">
+                        {{ form.submit(class_="form-submit-btn") }}
+                    </div>
+                </form>
+            </section>
+
+            <!-- Section for displaying posts -->
+            <section class="posts-section">
+                <h2 class="sub-heading">Your Previous Posts</h2>
+                <ul class="post-list">
+                    {% for post in posts %}
+                    <li class="post-item">
+                        <div class="post-meta">
+                            <strong>{{ post.author }}</strong> on {{ post.date_posted.strftime('%Y-%m-%d %H:%M:%S') }}
+                        </div>
+                        <h3 class="post-title">{{ post.title }}</h3>
+                        <div class="post-tags">Tags: {{ post.tags }}</div>
+                        <p class="post-content">{{ post.content }}</p>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </section>
+        </div>
+    </main>
+</body>
 </html>

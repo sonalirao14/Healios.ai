@@ -1,24 +1,29 @@
 <!DOCTYPE html>
-
-<html>
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title></title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="">
-    </head>
-    <body>
-        <a href="{{url_for('doctor_page')}}">Doctor Dashboard </a> 
-        <h1>This is a description page for Doctor</h1>
-        <form method="POST" action=" ">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor Description</title>
+    <link rel="stylesheet" href="/Healios.ai/static/doc_style.css">
+</head>
+<body>
+    <div class="container">
+        <nav>
+            <a href="{{ url_for('doctor_page') }}">Doctor Dashboard</a>
+        </nav>
+        <h1>Doctor Description</h1>
+        <form method="POST" action="">
             {{ form.hidden_tag() }}
-            {{ form.description }}
-            {{ form.submit }}
+            <div class="form-group">
+                <label for="description">Description:</label>
+                {{ form.description }}
+            </div>
+            <div class="form-group">
+                {{ form.submit }}
+            </div>
         </form>
-        <p>description:{{doc_des.description}}</p>
-        
-        <script src="" async defer></script>
-    </body>
+        <p class="description">Description: {{ doc_des.description }}</p>
+    </div>
+    <script src="" async defer></script>
+</body>
 </html>

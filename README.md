@@ -115,5 +115,5 @@ Contributions are **greatly appreciated**! Please feel free to suggest improveme
 
 If you have any questions or suggestions, feel free to reach out:
 
-- **Email**: [your-email@example.com]
+- **Email**: [garglakshya635@gmail.com]
 - **Project Link**: [https://github.com/Lakshya0018UP/Healios.ai](https://github.com/Lakshya0018UP/Healios.ai)

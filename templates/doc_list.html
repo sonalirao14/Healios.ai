@@ -1,25 +1,219 @@
 <!DOCTYPE html>
-
-<html>
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title></title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="">
-    </head>
-    <body>
-        <a href="{{url_for('dashboard')}}" >Dashboard </a>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="A network of the best doctors in the nation">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Doctor Network</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.6;
+            background: linear-gradient(135deg, #99a4d6 0%, #e4e0e8 100%);
+            color: #333;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        header {
+            background-color: rgba(44, 62, 80, 0.8);
+            color: #ecf0f1;
+            padding: 1rem;
+            text-align: center;
+            margin-bottom: 2rem;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+        h1 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+        .dashboard-link {
+            display: inline-block;
+            background-color: #3498db;
+            color: #fff;
+            padding: 0.5rem 1rem;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+        }
+        .dashboard-link:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+        }
+        .doctor-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+        .doctor-card {
+            background-color: rgba(5, 62, 81, 0.511);
+            border-radius: 15px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .doctor-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        .doctor-image {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 1.5rem auto;
+            display: block;
+            border: 4px solid #3498db;
+            transition: all 0.3s ease;
+        }
+        .doctor-card:hover .doctor-image {
+            transform: scale(1.1);
+            border-color: #e74c3c;
+        }
+        .doctor-info {
+            padding: 1rem;
+            text-align: center;
+        }
+        .doctor-info h2 {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+            color: #ecf0f1;
+            font-weight: 600;
+        }
+        .doctor-card:hover .doctor-info h2 {
+            color: #2a2d2b;
+        }
+        .doctor-qualifications {
+            font-size: 0.9rem;
+            color: #bdc3c7;
+            margin-bottom: 0.5rem;
+        }
+        .doctor-card:hover .doctor-qualifications {
+            color: #414547;
+        }
+        .doctor-specialties {
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            color: #ecf0f1;
+        }
+        .doctor-card:hover .doctor-specialties {
+            color: #36340d;
+        }
+        .doctor-actions {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+        .doctor-actions a {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            text-decoration: none;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+        .email-link {
+            background-color: #2ecc71;
+            color: #fff;
+        }
+        .email-link:hover {
+            background-color: #27ae60;
+            transform: translateY(-2px);
+        }
+        .appointment-link {
+            background-color: #e74c3c;
+            color: #fff;
+        }
+        .appointment-link:hover {
+            background-color: #c0392b;
+            transform: translateY(-2px);
+        }
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.2rem;
+            }
+            .doctor-grid {
+                grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+                gap: 1.5rem;
+            }
+            .doctor-card {
+                padding: 1rem;
+            }
+        }
+        @media (max-width: 480px) {
+            header h1 {
+                font-size: 1rem;
+                padding: 0.8rem;
+            }
+            .doctor-grid {
+                grid-template-columns: 1fr;
+            }
+            .doctor-image {
+                width: 100px;
+                height: 100px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="{{url_for('dashboard')}}" class="dashboard-link">Dashboard</a>
         <h1>A network consisting of best doctors of the Nation!! Saving lives and working hard to make the nation safe</h1>
-            {% for doctor in  res_doctors%}
-            <h2><li><strong>{{doctor.name}} -  {{ doctor.qualifications }}</strong></li></h2>
-            <h2>Specialties:{{doctor.specialties}}</h2>
-            <a href="mailto:{{doctor.email}}">Send Email</a>
-            <button><a href="{{ url_for('consult', id=doctor.id) }}">Click here to book an appointment</a></button>
-            {% endfor %}
-            
-        
-        <script src="" async defer></script>
-    </body>
+    </header>
+    <main class="container">
+        <div class="doctor-grid">
+            <div class="doctor-card">
+                <img src="https://source.unsplash.com/300x300/?doctor,male" alt="Dr. John Doe" class="doctor-image">
+                <div class="doctor-info">
+                    <h2><strong>{{doctor.name}}</strong></h2>
+                    <p class="doctor-qualifications">{{ doctor.qualifications }}</p>
+                    <p class="doctor-specialties"><strong>Specialties:</strong> {{doctor.specialties}}</p>
+                    <div class="doctor-actions">
+                        <a href="mailto:john.doe@example.com" class="email-link">Send Email</a>
+                        <a href="{{ url_for('consult', id='1') }}" class="appointment-link">Book Appointment</a>
+                    </div>
+                </div>
+            </div>
+            <div class="doctor-card">
+                <img src="https://source.unsplash.com/300x300/?doctor,male" alt="Dr. John Doe" class="doctor-image">
+                <div class="doctor-info">
+                    <h2><strong>{{doctor.name}}</strong></h2>
+                    <p class="doctor-qualifications">{{ doctor.qualifications }}</p>
+                    <p class="doctor-specialties"><strong>Specialties:</strong> {{doctor.specialties}}</p>
+                    <div class="doctor-actions">
+                        <a href="mailto:john.doe@example.com" class="email-link">Send Email</a>
+                        <a href="{{ url_for('consult', id='1') }}" class="appointment-link">Book Appointment</a>
+                    </div>
+                </div>
+            </div>
+            <div class="doctor-card">
+                <img src="https://source.unsplash.com/300x300/?doctor,male" alt="Dr. John Doe" class="doctor-image">
+                <div class="doctor-info">
+                    <h2><strong>{{doctor.name}}</strong></h2>
+                    <p class="doctor-qualifications">{{ doctor.qualifications }}</p>
+                    <p class="doctor-specialties"><strong>Specialties:</strong> {{doctor.specialties}}</p>
+                    <div class="doctor-actions">
+                        <a href="mailto:john.doe@example.com" class="email-link">Send Email</a>
+                        <a href="{{ url_for('consult', id='1') }}" class="appointment-link">Book Appointment</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
 </html>

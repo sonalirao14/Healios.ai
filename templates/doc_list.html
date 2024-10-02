@@ -15,7 +15,7 @@
             {% for doctor in  res_doctors%}
             <h2><li><strong>{{doctor.name}} -  {{ doctor.qualifications }}</strong></li></h2>
             <h2>Specialties:{{doctor.specialties}}</h2>
-            <h2>Specialties:{{doctor.description}}</h2>
+            <h2>Description:{{doctor.description}}</h2>
             <a href="mailto:{{doctor.email}}">Send Email</a>
             <button><a href="{{ url_for('consult', id=doctor.id) }}">Click here to book an appointment</a></button>
             {% endfor %}

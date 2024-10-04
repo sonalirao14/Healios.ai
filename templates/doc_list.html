@@ -186,8 +186,9 @@
                     <p class="doctor-qualifications">{{ doctor.qualifications }}</p>
                     <p class="doctor-specialties"><strong>Specialties:</strong> {{doctor.specialties}}</p>
                     <div class="doctor-actions">
-                        <a href="mailto:john.doe@example.com" class="email-link">Send Email</a>
-                        <a href="{{ url_for('consult', id='1') }}" class="appointment-link">Book Appointment</a>
+                        <a href="mailto:{{doctor.email}}" class="email-link">Send Email</a>
+                        <button><a href="{{ url_for('consult', id=doctor.id) }}" class="appointment-link">Click here to book an appointment</a></button>
+                        
                     </div>
                 </div>
             </div>

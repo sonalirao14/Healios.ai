@@ -175,34 +175,11 @@
         <a href="{{url_for('dashboard')}}" class="dashboard-link">Dashboard</a>
         <h1>A network consisting of best doctors of the Nation!! Saving lives and working hard to make the nation safe</h1>
     </header>
+    {% for doctor in  res_doctors%}
     <main class="container">
         <div class="doctor-grid">
             <div class="doctor-card">
-                <img src="https://source.unsplash.com/300x300/?doctor,male" alt="Dr. John Doe" class="doctor-image">
-                <div class="doctor-info">
-                    <h2><strong>{{doctor.name}}</strong></h2>
-                    <p class="doctor-qualifications">{{ doctor.qualifications }}</p>
-                    <p class="doctor-specialties"><strong>Specialties:</strong> {{doctor.specialties}}</p>
-                    <div class="doctor-actions">
-                        <a href="mailto:john.doe@example.com" class="email-link">Send Email</a>
-                        <a href="{{ url_for('consult', id='1') }}" class="appointment-link">Book Appointment</a>
-                    </div>
-                </div>
-            </div>
-            <div class="doctor-card">
-                <img src="https://source.unsplash.com/300x300/?doctor,male" alt="Dr. John Doe" class="doctor-image">
-                <div class="doctor-info">
-                    <h2><strong>{{doctor.name}}</strong></h2>
-                    <p class="doctor-qualifications">{{ doctor.qualifications }}</p>
-                    <p class="doctor-specialties"><strong>Specialties:</strong> {{doctor.specialties}}</p>
-                    <div class="doctor-actions">
-                        <a href="mailto:john.doe@example.com" class="email-link">Send Email</a>
-                        <a href="{{ url_for('consult', id='1') }}" class="appointment-link">Book Appointment</a>
-                    </div>
-                </div>
-            </div>
-            <div class="doctor-card">
-                <img src="https://source.unsplash.com/300x300/?doctor,male" alt="Dr. John Doe" class="doctor-image">
+                <!-- <img src="https://source.unsplash.com/300x300/?doctor,male" alt="Dr. John Doe" class="doctor-image"> -->
                 <div class="doctor-info">
                     <h2><strong>{{doctor.name}}</strong></h2>
                     <p class="doctor-qualifications">{{ doctor.qualifications }}</p>
@@ -215,5 +192,7 @@
             </div>
         </div>
     </main>
+    {% endfor %}
+    <script src="" async defer></script>
 </body>
 </html>

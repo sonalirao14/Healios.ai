@@ -1,51 +1,200 @@
 <!DOCTYPE html>
-
-<html>
+<html lang="en">
 <head>
-
     <meta charset="utf-8">
-    <meta name="description" content="WebRTC code samples">
+    <meta name="description" content="WebRTC Video Consultation">
     <meta name="viewport" content="width=device-width, user-scalable=yes, initial-scale=1, maximum-scale=1">
-    <meta itemprop="description" content="Client-side WebRTC code samples">
-    <meta itemprop="image" content="../../../images/webrtc-icon-192x192.png">
-    <meta itemprop="name" content="WebRTC code samples">
+    <meta itemprop="description" content="Client-side WebRTC Video Consultation">
+    <meta itemprop="image" content="/placeholder.svg?height=192&width=192">
+    <meta itemprop="name" content="WebRTC Video Consultation">
     <meta name="mobile-web-app-capable" content="yes">
-    <meta id="theme-color" name="theme-color" content="#ffffff">
+    <meta id="theme-color" name="theme-color" content="#4a90e2">
 
     <base target="_blank">
 
-    <title>Peer connection between two tabs</title>
+    <title>Medical Video Consultation</title>
 
-    <link rel="icon" sizes="192x192" href="../../../images/webrtc-icon-192x192.png">
+    <link rel="icon" sizes="192x192" href="/placeholder.svg?height=192&width=192">
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet" type="text/css">
-    <link rel="stylesheet" href="../../../css/main.css"/>
-    <link rel="stylesheet" href="css/main.css"/>
+    <style>
+        :root {
+            --primary-color: #4a90e2;
+            --secondary-color: #f5a623;
+            --background-color: #f0f4f8;
+            --text-color: #333;
+            --border-radius: 8px;
+        }
 
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--background-color);
+            color: var(--text-color);
+        }
+
+        #container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h1 {
+            color: var(--primary-color);
+            text-align: center;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+        }
+
+        .video-container {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            height: 60vh;
+        }
+
+        .video-wrapper {
+            width: 48%;
+            position: relative;
+            overflow: hidden;
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            background-color: #000;
+        }
+
+        .video-label {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .control-button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            margin: 0 10px;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s, transform 0.1s;
+        }
+
+        .control-button:hover {
+            background-color: #3a7bc8;
+        }
+
+        .control-button:active {
+            transform: scale(0.98);
+        }
+
+        #hangupButton {
+            background-color: #e74c3c;
+        }
+
+        #hangupButton:hover {
+            background-color: #c0392b;
+        }
+
+        .info-box {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin-top: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .info-box h2 {
+            color: var(--primary-color);
+            margin-top: 0;
+        }
+
+        .status-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .status-active {
+            background-color: #2ecc71;
+        }
+
+        .status-inactive {
+            background-color: #e74c3c;
+        }
+
+        @media (max-width: 768px) {
+            .video-container {
+                flex-direction: column;
+                height: auto;
+            }
+
+            .video-wrapper {
+                width: 100%;
+                height: 40vh;
+                margin-bottom: 20px;
+            }
+        }
+    </style>
 </head>
 
 <body>
+    <div id="container">
+        <h1>Video Consultation</h1>
 
-<div id="container">
-    
-    
+        <div class="video-container">
+            <div class="video-wrapper">
+                <video id="localVideo" playsinline autoplay muted></video>
+                <div class="video-label">You</div>
+            </div>
+            <div class="video-wrapper">
+                <video id="remoteVideo" playsinline autoplay></video>
+                <div class="video-label">Doctor</div>
+            </div>
+        </div>
 
-    <video id="localVideo" playsinline autoplay muted></video>
-    <video id="remoteVideo" playsinline autoplay></video>
+        <div class="controls">
+            <button id="startButton" class="control-button">Start Consultation</button>
+            <button id="hangupButton" class="control-button">End Consultation</button>
+        </div>
 
-    <div class="box">
-        <button id="startButton">Start</button>
-        <button id="hangupButton"><a href="{{url_for('dashboard')}}">Hang Up</a></button>
+        <div class="info-box">
+            <h2>Consultation Information</h2>
+            <p><strong>Status:</strong> <span class="status-indicator" id="connectionStatus"></span><span id="statusText">Not Connected</span></p>
+            <p><strong>Patient:</strong> <span id="patientName">John Doe</span></p>
+            <p><strong>Doctor:</strong> <span id="doctorName">Dr. Jane Smith</span></p>
+        </div>
+
+        <div class="info-box">
+            <h2>Instructions</h2>
+            <p>1. Click the "Start Consultation" button to begin your video call.</p>
+            <p>2. Ensure your camera and microphone are working properly.</p>
+            <p>3. If you're the doctor, share this page's unique link with the patient to join the consultation.</p>
+            <p>4. Click "End Consultation" when you're finished.</p>
+        </div>
     </div>
-
-    <p>Click the start button in two tabs (of the same browser; can be in different windows) to make a call</p>
-    <p>Share the Link with other person to join</p>
-
-    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='main.css') }}">
-</div>
 
 <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
 <script src="{{url_for('static', filename='main.js')}}"></script>
-
 <script src="{{url_for('static', filename='ga.js')}}"></script>
 </body>
 </html>

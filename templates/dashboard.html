@@ -1,22 +1,532 @@
 <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Healios AI - User Dashboard</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            height: 100%;
+        }
+        header {
+            background-color: #00e1ff;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+        }
 
-<html>
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title></title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="">
-    </head>
-    <body>
-       <h1>The logged in content</h1>
-       <a href="{{url_for('logout')}}" >For Logout click here </a>   
-       <a href="{{url_for('write')}}">For posting views click here</a>
-       <a href="{{url_for('doc_list')}}">Doctor List</a>
-       <a href="{{url_for('video')}}">Video consulation with doctor</a>
-       <a href="{{url_for('heartrate')}}">Measure heartRate</a>
-       <p>welcome{{user_logged.username}}</p>
-        <script src="" async defer></script>
-    </body>
+
+        header.shrink {
+            padding: 0.5rem 2rem;
+            background-color: #00c4e0;
+        }
+
+        .logo {
+            color: #1e1c1c;
+            font-size: 1.5rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+            white-space: nowrap;
+        }
+
+        nav {
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-links {
+            display: flex;
+            justify-content: flex-end;
+            flex-grow: 1;
+            margin-right: 1rem;
+        }
+
+        .nav-links a {
+            color: #000;
+            text-decoration: none;
+            margin: 0 1rem;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+        }
+
+        .nav-links a:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: #fff;
+        }
+
+        .user-info {
+            position: relative;
+            margin-left: 2rem;
+        }
+
+        .user-icon {
+            background-color: #fff;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .user-icon:hover {
+            background-color: #f0f0f0;
+        }
+
+        .user-menu {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 50px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 1rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            flex-direction: column;
+            align-items: flex-start;
+            min-width: 150px;
+        }
+
+        .user-menu.active {
+            display: flex;
+        }
+
+        .user-menu span {
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+
+        .logout-btn {
+            background-color: #ff3860;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-top: 0.5rem;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .logout-btn:hover {
+            background-color: #ff1443;
+        }
+
+        .hero {
+            background-image: url('/Healios.ai/static/images/1.jpg');
+            background-size: cover;
+            background-position: center;
+            height: 60vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 2rem;
+            position: relative;
+            margin-top: 80px;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            color: #000;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .tagline {
+            font-size: 1.2rem;
+        }
+
+        .underline {
+            width: 100px;
+            height: 3px;
+            background-color: #00e1ff;
+            margin-top: 0.5rem;
+        }
+
+        .services-section {
+            padding: 2rem;
+            background-color: #abeef7;
+            margin-top: 1rem;
+        }
+
+        .services-section h2 {
+            text-align: center;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .service-card {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .service-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .service-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .service-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .service-description {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .service-card {
+            animation: fadeInUp 0.5s ease-out forwards;
+            opacity: 0;
+        }
+
+        .service-card:nth-child(1) {
+            animation-delay: 0.1s;
+        }
+
+        .service-card:nth-child(2) {
+            animation-delay: 0.3s;
+        }
+
+        .service-card:nth-child(3) {
+            animation-delay: 0.5s;
+        }
+
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+        }
+
+        .menu-toggle span {
+            width: 25px;
+            height: 3px;
+            background-color: #000;
+            margin: 2px 0;
+            transition: all 0.3s ease;
+        }
+
+        @media screen and (max-width: 768px) {
+            .menu-toggle {
+                display: flex;
+            }
+
+            .nav-links {
+                position: fixed;
+                top: 80px;
+                left: -100%;
+                flex-direction: column;
+                background-color: #00e1ff;
+                width: 100%;
+                text-align: center;
+                transition: 0.3s;
+                box-shadow: 0 10px 27px rgba(0, 0, 0, 0.05);
+            }
+
+            .nav-links.active {
+                left: 0;
+            }
+
+            .nav-links a {
+                margin: 1rem 0;
+            }
+
+            .user-info {
+                margin-left: 1rem;
+            }
+        }
+
+        .footer {
+    background-image: url('/placeholder.svg?height=1080&width=1920');
+    background-size: cover;
+    background-position: center;
+    color: #1e1c1c;
+    padding: 3rem 0 1rem;
+    font-family: Arial, sans-serif;
+    position: relative;
+  }
+
+  .footer::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(255, 255, 255, 0.8);
+    z-index: 1;
+  }
+
+  .footer-container {
+    display: flex;
+    justify-content: space-between;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    position: relative;
+    z-index: 2;
+  }
+
+  .footer-info, .footer-form {
+    flex-basis: 48%;
+  }
+
+  .footer h3 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    color: #191a1a;
+  }
+
+  .footer p {
+    margin-bottom: 0.5rem;
+  }
+  .form-group {
+    margin-bottom: 1rem;
+  }
+
+  .form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+
+  .form-group input,
+  .form-group textarea {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+    background-color: rgba(255, 255, 255, 0.8);
+  }
+
+  .form-group textarea {
+    height: 100px;
+    resize: vertical;
+  }
+
+  .submit-btn {
+    background-color: #ff1443;
+    color: #1e1c1c;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .submit-btn:hover {
+    background-color: #00c4e0;
+  }
+
+  .footer-bottom {
+    text-align: center;
+    padding: 0.5rem 0;
+    margin-top: 1rem;
+    border-top: 1px solid rgba(30, 28, 28, 0.1);
+    position: relative;
+    background-color: #c4ebf1;
+    z-index: 1;
+  }
+
+  @media (max-width: 768px) {
+    .footer-container {
+      flex-direction: column;
+    }
+
+    .footer-info, .footer-form {
+      flex-basis: 100%;
+      margin-bottom: 2rem;
+    }
+  }
+    </style>
+</head>
+<body>
+    <header id="header">
+        <div class="logo">Healios AI</div>
+        <nav>
+            <div class="menu-toggle" onclick="toggleMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <div class="nav-links" id="navLinks">
+                <a href="#home">Home</a>
+                <a href="#about">About</a>
+                <a href="#services">Services</a>
+                <a href="#testimonials">Testimonials</a>
+                <a href="#contact">Contact</a>
+            </div>
+            <div class="user-info">
+                <div class="user-icon" onclick="toggleUserMenu()">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                </div>
+                <div class="user-menu" id="userMenu">
+                    <span>{{user_logged.username}}</span>
+                    <a href="{{url_for('logout')}}" class="logout-btn">Logout</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <main>
+        <section class="hero" id="home">
+            <div class="hero-content">
+                <h1>Healios-AI</h1>
+                <div class="underline"></div>
+                <p class="tagline">Revolutionizing Health with AI</p>
+            </div>
+        </section>
+        <section class="services-section" id="services" >
+            <h2 >Our Services</h2>
+            <div class="services-grid" >
+                <div class="service-card">
+                    <div class="service-icon">📝</div>
+                    <h3 class="service-title">Post Views</h3>
+                    <p class="service-description">Share your thoughts and experiences with our community.</p>
+                    <a href="{{url_for('write')}}" class="logout-btn">Access</a>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">👨‍⚕️</div>
+                    <h3 class="service-title">Doctor List</h3>
+                    <p class="service-description">Browse our extensive list of qualified healthcare professionals.</p>
+                    <a href="{{url_for('doc_list')}}" class="logout-btn">View List</a>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">🎥</div>
+                    <h3 class="service-title">Video Consultation</h3>
+                    <p class="service-description">Connect with doctors remotely for personalized care.</p>
+                    <a href="{{url_for('video')}}" class="logout-btn">Start Consultation</a>
+                </div>
+            </div>
+        </section>
+
+        <footer class="footer">
+            <div class="footer-container" id="contact">
+              <div class="footer-info">
+                <h3>Contact Us</h3>
+                <p><strong>Email:</strong> rigvedbhargav@gmail.com</p>
+                <p><strong>Phone:</strong> +1 (555) 123-4567</p>
+                <p><strong>Address:</strong> 123 AI Health Street, Tech City</p>
+              
+              </div>
+              <div class="footer-form">
+                <h3>Send us a message</h3>
+                <form id="contact-form">
+                  <div class="form-group">
+                    <label for="name">Name</label>
+                    <input type="text" id="name" name="name" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="message">Message</label>
+                    <textarea id="message" name="message" required></textarea>
+                  </div>
+                  <button type="submit" class="submit-btn">Send Message</button>
+                </form>
+              </div>
+            </div>
+            <div class="footer-bottom">
+              <p>&copy; 2024 Healios AI. All rights reserved.</p>
+            </div>
+          </footer>
+    </main>
+    <script>
+        function toggleUserMenu() {
+            var menu = document.getElementById('userMenu');
+            menu.classList.toggle('active');
+        }
+
+        function toggleMenu() {
+            var navLinks = document.getElementById('navLinks');
+            navLinks.classList.toggle('active');
+        }
+
+        window.addEventListener('scroll', function() {
+            var header = document.getElementById('header');
+            if (window.scrollY > 50) {
+                header.classList.add('shrink');
+            } else {
+                header.classList.remove('shrink');
+            }
+        });
+
+        window.addEventListener('resize', function() {
+            var navLinks = document.getElementById('navLinks');
+            if (window.innerWidth > 768) {
+                navLinks.classList.remove('active');
+            }
+        });
+
+        document.getElementById('contact-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+         // Here you would send the form data to your server
+         alert('Thank you for your message. We will get back to you soon!');
+         this.reset();});
+    </script>
+</body>
+
 </html>

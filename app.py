@@ -5,9 +5,12 @@ from flask_bcrypt import Bcrypt
 from datetime import datetime
 from flask_wtf import FlaskForm
 from wtforms import StringField,PasswordField,SubmitField,TextAreaField
-from wtforms.validators import InputRequired,Length, ValidationError
+from wtforms.validators import InputRequired,Length, ValidationError,Email
 from flask_migrate import Migrate
 from flask_cors import CORS
+from openpyxl import load_workbook, Workbook
+import os
+import xlsxwriter
 
 app=Flask(__name__)
 bcrypt=Bcrypt(app)
@@ -128,6 +131,11 @@ class DescriptionForm(FlaskForm):
     description = TextAreaField('Description', render_kw={'placeholder': 'Write your description here...'})
     submit = SubmitField('Submit')
 
+class FeedbackForm(FlaskForm):
+    name=StringField('Name',validators=[InputRequired(),Length(min=2,max=50)])
+    email=StringField('Email',validators=[InputRequired(),Email()])
+    message=TextAreaField('Message',validators=[InputRequired(), Length(min=10, max=500)])
+    submit=SubmitField('Submit')
 
 @app.route('/')
 def index():
@@ -163,7 +171,7 @@ def signup():
 
     return render_template('signup.html',form=form)
 
-@app.route('/dashboard')
+@app.route('/dashboard',methods=['GET','POST'])
 @login_required
 def dashboard():
     user_logged=current_user
@@ -342,6 +350,50 @@ def heartrate():
 def logout():
     logout_user()
     return redirect ('/login')
+
+def save_feedback_to_excel(name, email, message):
+    file_path = 'feedback.xlsx'
+
+    # Check if the Excel file already exists
+    if not os.path.exists(file_path):
+        # Create a new Excel workbook and add headers
+        workbook = xlsxwriter.Workbook(file_path)
+        sheet = workbook.add_worksheet()
+        sheet.write(0, 0, 'Name')
+        sheet.write(0, 1, 'Email')
+        sheet.write(0, 2, 'Message')
+        row = 1  # Start writing data from row 1
+        workbook.close()
+    else:
+        # Calculate the next empty row based on the existing file's content
+        import pandas as pd
+        df = pd.read_excel(file_path)
+        row = len(df) + 1
+
+    # Open the Excel file again to write new feedback
+    workbook = xlsxwriter.Workbook(file_path, {'strings_to_urls': False})
+    sheet = workbook.add_worksheet()
+
+    # Write feedback data into the next available row
+    sheet.write(row, 0, name)
+    sheet.write(row, 1, email)
+    sheet.write(row, 2, message)
+
+    workbook.close()
+@app.route('/feedback',methods=['GET','POST'])
+@login_required
+def feedback():
+    form=FeedbackForm()
+    if form.validate_on_submit():
+        name=form.name.data
+        email=form.email.data
+        message=form.message.data
+        save_feedback_to_excel(name,email,message)
+        flash('Thank you for your feedback!', 'success')
+        return redirect('/dashboard')
+    return render_template('feedback.html',form=form)
+
+
 
 
 if __name__=='__main__':

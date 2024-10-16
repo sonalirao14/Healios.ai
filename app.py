@@ -8,7 +8,6 @@ from wtforms import StringField,PasswordField,SubmitField,TextAreaField
 from wtforms.validators import InputRequired,Length, ValidationError,Email
 from flask_migrate import Migrate
 from flask_cors import CORS
-from openpyxl import load_workbook, Workbook
 import os
 import xlsxwriter
 

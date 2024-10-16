@@ -10,6 +10,7 @@ from flask_migrate import Migrate
 from flask_cors import CORS
 import os
 import xlsxwriter
+import pandas as pd
 
 app=Flask(__name__)
 bcrypt=Bcrypt(app)
@@ -353,32 +354,22 @@ def logout():
 def save_feedback_to_excel(name, email, message):
     file_path = 'feedback.xlsx'
 
-    # Check if the Excel file already exists
-    if not os.path.exists(file_path):
-        # Create a new Excel workbook and add headers
-        workbook = xlsxwriter.Workbook(file_path)
-        sheet = workbook.add_worksheet()
-        sheet.write(0, 0, 'Name')
-        sheet.write(0, 1, 'Email')
-        sheet.write(0, 2, 'Message')
-        row = 1  # Start writing data from row 1
-        workbook.close()
+    # Create a DataFrame for the new feedback
+    new_feedback = pd.DataFrame([{'Name': name, 'Email': email, 'Message': message}])
+
+    if os.path.exists(file_path):
+        # Read existing data from the Excel file
+        existing_data = pd.read_excel(file_path)
+
+        # Concatenate existing data with the new feedback
+        updated_data = pd.concat([existing_data, new_feedback], ignore_index=True)
     else:
-        # Calculate the next empty row based on the existing file's content
-        import pandas as pd
-        df = pd.read_excel(file_path)
-        row = len(df) + 1
+        # If the file doesn't exist, use the new feedback as the initial data
+        updated_data = new_feedback
 
-    # Open the Excel file again to write new feedback
-    workbook = xlsxwriter.Workbook(file_path, {'strings_to_urls': False})
-    sheet = workbook.add_worksheet()
-
-    # Write feedback data into the next available row
-    sheet.write(row, 0, name)
-    sheet.write(row, 1, email)
-    sheet.write(row, 2, message)
-
-    workbook.close()
+    # Save the updated data back to the Excel file
+    updated_data.to_excel(file_path, index=False)
+    
 @app.route('/feedback',methods=['GET','POST'])
 @login_required
 def feedback():

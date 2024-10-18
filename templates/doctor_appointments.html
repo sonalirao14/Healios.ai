@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor Dashboard</title>
+</head>
+<body>
+    <h1>Manage Appointments</h1>
+    <ul>
+        {% for appointment in appointments %}
+            <li>
+                <strong>{{ appointment.name }}</strong> - 
+                {{ appointment.email }} - 
+                {{ appointment.date }} at {{ appointment.time }}
+                <form method="POST" action="{{ url_for('update_status', appointment_id=appointment.id) }}">
+                    {{ form.hidden_tag() }}
+                    {{ form.status() }}
+                    
+                    {{ form.submit() }}
+                </form>
+            </li>
+        {% else %}
+            <p>No pending appointments.</p>
+        {% endfor %}
+    </ul>
+</body>
+</html>

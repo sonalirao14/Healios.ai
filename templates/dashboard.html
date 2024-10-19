@@ -26,6 +26,7 @@
             box-sizing: border-box;
         }
 
+
         header.shrink {
             padding: 0.5rem 2rem;
             background-color: #00c4e0;
@@ -544,7 +545,7 @@
         <footer class="footer">
             <div class="footer-container" id="contact">
               <div class="footer-info">
-                <h3>Contact Us</h3>
+              <h3>Contact Us</h3>
                 <p><strong>Email:</strong> rigvedbhargav@gmail.com</p>
                 <p><strong>Phone:</strong> +91 6203522100</p>
                 <p><strong>Address:</strong> Pune</p>
@@ -552,7 +553,9 @@
               </div>
               <div class="footer-form">
                 <h3>Kindly Share us your valuable feedback</h3>
-                <a href="{{ url_for('heartrate') }}" class="logout-btn">Feedback</a>
+                <a href="{{ url_for('feedback') }}" class="logout-btn">Feedback</a>
+              </div>
+
               </div>
             </div>
             <div class="footer-bottom">
@@ -594,4 +597,5 @@
          this.reset();});
     </script>
 </body>
+
 </html>

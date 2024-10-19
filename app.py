@@ -332,6 +332,11 @@ def description(id):
 def video():
     return render_template('video.html')
 
+@app.route('/heartrate')
+@login_required
+def heartrate():
+    return render_template('heartrate.html')
+
 @app.route('/logout')
 @login_required
 def logout():

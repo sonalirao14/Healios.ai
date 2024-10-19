@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feedback Form</title>
+</head>
+<body>
+  <style>
+    /* Reset and General Styles */
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Arial', sans-serif;
+  height: 100%;
+  background-color: #e8f9fc;
+}
+
+h2 {
+  text-align: center;
+  margin-top: 2rem;
+  color: #1e1c1c;
+}
+
+/* Form Styles */
+form {
+  max-width: 600px;
+  margin: 2rem auto;
+  background-color: #ffffff;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+div {
+  margin-bottom: 1rem;
+}
+
+label {
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  display: block;
+  color: #00c4e0;
+}
+
+input[type="text"], input[type="email"], textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: rgba(255, 255, 255, 0.8);
+  transition: border-color 0.3s;
+}
+
+input[type="text"]:focus, input[type="email"]:focus, textarea:focus {
+  border-color: #00e1ff;
+  outline: none;
+}
+
+textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+button {
+  background-color: #00c4e0;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: 100%;
+  font-size: 1rem;
+}
+
+button:hover {
+  background-color: #00e1ff;
+}
+
+/* Flash Messages */
+ul {
+  max-width: 600px;
+  margin: 1rem auto;
+  padding: 0;
+  list-style-type: none;
+}
+
+li {
+  padding: 1rem;
+  margin-bottom: 0.5rem;
+  border-radius: 5px;
+}
+
+li.success {
+  background-color: #abeef7;
+  color: #1e1c1c;
+}
+
+li.error {
+  background-color: #ff3860;
+  color: white;
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+  form {
+      margin: 1rem;
+      padding: 1.5rem;
+  }
+
+  button {
+      font-size: 0.9rem;
+  }
+}
+</style>
+    <h2>Feedback Form</h2>
+    <form method="POST">
+        {{ form.hidden_tag() }}
+        <div>
+            {{ form.name.label }}<br>
+            {{ form.name(size=30) }}
+        </div>
+        <div>
+            {{ form.email.label }}<br>
+            {{ form.email(size=30) }}
+        </div>
+        <div>
+            {{ form.message.label }}<br>
+            {{ form.message(cols=30, rows=5) }}
+        </div>
+        <div>
+            {{ form.submit() }}
+        </div>
+    </form>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <ul>
+          {% for category, message in messages %}
+            <li class="{{ category }}">{{ message }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+</body>
+</html>

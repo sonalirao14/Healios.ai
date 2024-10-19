@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Appointment</title>
+    
+    <!-- Flatpickr CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+    <!-- Flatpickr JS -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+</head>
+<body>
+    <h1>Book an Appointment</h1>
+    <form method="POST">
+        {{ form.hidden_tag() }}
+        
+        <label for="name">Name:</label>
+        {{ form.name(size=20) }}<br><br>
+
+        <label for="email">Email:</label>
+        {{ form.email(size=20) }}<br><br>
+
+        <label for="date">Select Date:</label>
+        {{ form.date(size=20, id="date-picker") }}<br><br>
+
+        <label for="time">Select Time:</label>
+        {{ form.time(size=20, id="time-picker") }}<br><br>
+
+        {{ form.submit() }}
+    </form>
+
+    <script>
+        // Initialize Flatpickr for Date
+        flatpickr("#date-picker", {
+            dateFormat: "Y-m-d",  // Format: 2024-10-14
+            minDate: "today"      // Disable past dates
+        });
+
+        // Initialize Flatpickr for Time
+        flatpickr("#time-picker", {
+            enableTime: true,
+            noCalendar: true,
+            dateFormat: "H:i",    // Format: 13:30
+            time_24hr: true
+        });
+    </script>
+</body>
+</html>

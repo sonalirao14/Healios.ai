@@ -1,13 +1,16 @@
-from flask import Flask,render_template,url_for,redirect,jsonify,flash
+from flask import Flask,render_template,url_for,redirect,jsonify,flash,request
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin,login_user,LoginManager,login_required,logout_user,current_user
 from flask_bcrypt import Bcrypt
 from datetime import datetime
 from flask_wtf import FlaskForm
-from wtforms import StringField,PasswordField,SubmitField,TextAreaField
-from wtforms.validators import InputRequired,Length, ValidationError
+from wtforms import StringField,PasswordField,SubmitField,TextAreaField,SelectField
+from wtforms.validators import InputRequired,Length, ValidationError,Email
 from flask_migrate import Migrate
 from flask_cors import CORS
+import os
+import xlsxwriter
+import pandas as pd
 
 app=Flask(__name__)
 bcrypt=Bcrypt(app)
@@ -65,13 +68,15 @@ class Docs(db.Model,UserMixin):
     password=db.Column(db.String(50),nullable=False)
     description=db.Column(db.Text,nullable=True)
     
-
+class Appointment(db.Model):
+    id=db.Column(db.Integer,primary_key=True)
+    name=db.Column(db.String(100),nullable=False)
+    email=db.Column(db.String(50), nullable=False)
+    date = db.Column(db.String(10), nullable=False)
+    time = db.Column(db.String(5), nullable=False)
+    status = db.Column(db.String(20), default="Pending") 
+    author=db.Column(db.String(50),nullable=False)
     
-    
-  
-
-
-
 
 class RegisterForm(FlaskForm):
     username=StringField(validators=[InputRequired(),Length(min=4,max=20)],render_kw={"placeholder":"Username"})
@@ -128,6 +133,22 @@ class DescriptionForm(FlaskForm):
     description = TextAreaField('Description', render_kw={'placeholder': 'Write your description here...'})
     submit = SubmitField('Submit')
 
+class FeedbackForm(FlaskForm):
+    name=StringField('Name',validators=[InputRequired(),Length(min=2,max=50)])
+    email=StringField('Email',validators=[InputRequired(),Email()])
+    message=TextAreaField('Message',validators=[InputRequired(), Length(min=10, max=500)])
+    submit=SubmitField('Submit')
+
+class AppointmentForm(FlaskForm):
+    name=StringField('Name',validators=[InputRequired()])
+    email=StringField('Email',validators=[InputRequired(),Email()])
+    date=StringField('Date',validators=[InputRequired()])
+    time=StringField('time',validators=[InputRequired()])
+    submit=SubmitField('Submit')
+
+class StatusForm(FlaskForm):
+    status=SelectField('Status',choices=[('Accepted', 'Accept'), ('Rejected', 'Reject')])
+    submit=SubmitField('Submit')
 
 @app.route('/')
 def index():
@@ -163,7 +184,7 @@ def signup():
 
     return render_template('signup.html',form=form)
 
-@app.route('/dashboard')
+@app.route('/dashboard',methods=['GET','POST'])
 @login_required
 def dashboard():
     user_logged=current_user
@@ -342,6 +363,75 @@ def heartrate():
 def logout():
     logout_user()
     return redirect ('/login')
+
+def save_feedback_to_excel(name, email, message):
+    file_path = 'feedback.xlsx'
+
+    # Create a DataFrame for the new feedback
+    new_feedback = pd.DataFrame([{'Name': name, 'Email': email, 'Message': message}])
+
+    if os.path.exists(file_path):
+        # Read existing data from the Excel file
+        existing_data = pd.read_excel(file_path)
+
+        # Concatenate existing data with the new feedback
+        updated_data = pd.concat([existing_data, new_feedback], ignore_index=True)
+    else:
+        # If the file doesn't exist, use the new feedback as the initial data
+        updated_data = new_feedback
+
+    # Save the updated data back to the Excel file
+    updated_data.to_excel(file_path, index=False)
+    
+@app.route('/feedback',methods=['GET','POST'])
+@login_required
+def feedback():
+    form=FeedbackForm()
+    if form.validate_on_submit():
+        name=form.name.data
+        email=form.email.data
+        message=form.message.data
+        save_feedback_to_excel(name,email,message)
+        flash('Thank you for your feedback!', 'success')
+        return redirect('/dashboard')
+    return render_template('feedback.html',form=form)
+
+@app.route('/appointment',methods=['GET','POST'])
+@login_required
+def appointment():
+    form=AppointmentForm()
+    if form.validate_on_submit():
+        appointment=Appointment(name=form.name.data,email=form.email.data,date=form.date.data,time=form.time.data,author=current_user.username)
+        db.session.add(appointment)
+        db.session.commit()
+        return redirect('/dashboard')
+    return render_template('appointment.html',form=form)
+
+@app.route('/schedule',methods=['GET','POST'])
+@login_required
+def schedule():
+    appointment_scheduled=Appointment.query.filter_by(author=current_user.username).all()
+    return render_template('schedule.html',appointment_scheduled=appointment_scheduled)
+
+@app.route('/doctor_appointment',methods=['GET','POST'])
+@login_required
+def doctor_appointment():
+    appointments=Appointment.query.filter_by(status='Pending').all()
+    form=StatusForm()
+    if form.validate_on_submit():
+        return redirect(url_for('doctor_appointments'))
+    return render_template("doctor_appointments.html", appointments=appointments, form=form)
+
+@app.route('/update_status/<int:appointment_id>',methods=['GET','POST'])
+def update_status(appointment_id):
+    form=StatusForm()
+    if form.validate_on_submit():
+        appointment=Appointment.query.get_or_404(appointment_id)
+        appointment.status=form.status.data
+        db.session.commit()
+        return redirect('/doctor_appointment')
+    return render_template('doc_page')
+
 
 
 if __name__=='__main__':

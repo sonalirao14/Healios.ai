@@ -26,7 +26,6 @@
             box-sizing: border-box;
         }
 
-
         header.shrink {
             padding: 0.5rem 2rem;
             background-color: #00c4e0;
@@ -39,6 +38,9 @@
             letter-spacing: 1px;
             white-space: nowrap;
         }
+
+    
+
 
         nav {
             display: flex;
@@ -131,7 +133,7 @@
         }
 
         .hero {
-            background-image: url('static/images/1.jpg');
+            background-image: url('/Healios.ai/static/images/1.jpg');
             background-size: cover;
             background-position: center;
             height: 60vh;
@@ -173,129 +175,186 @@
             height: 3px;
             background-color: #00e1ff;
             margin-top: 0.5rem;
+            margin-left: 10%;
         }
               
-        .abtback-container {
+        .about-section {
             position: relative;
-            width: 90%;
-            height: 80%;
-            margin: 50px auto;
-            background: url('https://source.unsplash.com/featured/?stethoscope,health') 
-                no-repeat center center/cover;
-            border-radius: 12px;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             overflow: hidden;
         }
-        .abt-content {
+        .background-image {
             position: absolute;
-            top: 20%;
-            left: -100%; /* Start off-screen */
+            top: 0;
+            left: 0;
+            width: 50%;
+            height: 60%;
+             background-color: #d041e6;
+             opacity: 0.4;
+            background-size: cover;
+            background-position: center;
+            left: 60%;
+        
+            /* filter: grayscale(100%); */
+            animation: zoomBackground 20s infinite alternate;
+        }
+        @keyframes zoomBackground {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.5); }
+        }
+        .background-image1 {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 40%;
+            height: 70%;
+            background-color: #41afe6;
+            opacity: 0.3;
+            background-size: cover;
+            background-position: center;
+            right: 60%;
+            top: 50%;
+            /* filter: grayscale(100%); */
+            animation: zoomBackground 20s infinite alternate;
+        }
+        .content-card {
+            position: relative;
             width: 90%;
-            background-color: white;
-            padding: 30px;
+            max-width: 600px;
             height: 50%;
+            background-color: white;
+            padding: 40px;
             border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            opacity: 0;
-            transition: all 1s ease-out;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 1s ease-out;
         }
-        .abt-content h1 {
-            font-size: 2rem;
-            text-align: center;
-            margin-bottom: 10px;
-            color: #212121;
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-        .abt-content h1::after {
-            content: "";
-            display: block;
-            width: 60px;
-            height: 3px;
-            background-color: #00bcd4;
-            margin: 8px auto;
-        }
-        .abt-content p {
-            margin-top: 15px;
-            font-size: 1.1rem;
-            color: #424242;
-            line-height: 1.6;
-        }
-        .abt-content:hover {
-            transform: scale(1.02);
-            transition: transform 0.3s ease-in-out;
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            animation: slideIn 1s ease-out;
         }
         @keyframes slideIn {
-            0% {
-                left: -100%;
-                opacity: 0;
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        .underline {
+            width: 50px;
+            margin-left: 10px;
+            height: 3px;
+            background-color: #00e1ff;
+            margin-bottom: 20px;
+            animation: growWidth 1s ease-out;
+        }
+        @keyframes growWidth {
+            from { width: 0; }
+            to { width: 100px; }
+        }
+        p {
+            font-size: 1.25rem;
+            line-height: 1.6;
+            color: #333;
+            animation: fadeIn 1s ease-out 0.5s both;
+        }
+        @media (max-width: 768px) {
+            .content-card {
+                width: 90%;
+                padding: 30px;
             }
-            100% {
-                left: 5%;
-                opacity: 1;
+            h1 {
+                font-size: 2rem;
             }
         }
         .services-section {
-            padding: 2rem;
-            background-color: #abeef7;
-            margin-top: 1rem;
+            padding: 5rem 3rem;
+            z-index: 1;
+            background-color: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            margin: 2rem;
         }
-
+            
         .services-section h2 {
             text-align: center;
+            font-size: 3rem;
+            z-index: 2;
+            color: #171717;
+            text-shadow: 2px 2px 4px rgba(68, 65, 65, 0.5);
+            margin-bottom: 2rem;
+        }
+
+        .underline1 {
+            width: 180px;
+            margin: 0 auto;
+            height: 3px;
+            background-color: #00e1ff;
+            margin-bottom: 3rem;
         }
 
         .services-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 2rem;
-            margin-top: 2rem;
         }
 
         .service-card {
-            background-color: #fff;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            padding: 1.5rem;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            box-shadow: 0 4px 32px rgba(31, 38, 135, 0.37);
+            backdrop-filter: blur(2px);
+            border: 1px solid rgba(29, 27, 27, 0.18);
+            padding: 2rem;
             text-align: center;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
         .service-card:hover {
             transform: translateY(-10px);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 12px 48px rgba(56, 58, 84, 0.5);
         }
 
         .service-icon {
-            font-size: 3rem;
-            margin-bottom: 1rem;
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            color: #00e1ff;
         }
 
         .service-title {
-            font-size: 1.2rem;
+            font-size: 1.5rem;
             font-weight: bold;
-            margin-bottom: 0.5rem;
+            margin-bottom: 1rem;
+            color: #e91f1f;
         }
 
         .service-description {
-            font-size: 0.9rem;
-            color: #666;
+            font-size: 1rem;
+            color: #3d3838;
+            margin-bottom: 1.5rem;
         }
 
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        .service-card .logout-btn {
+            background-color: #00e1ff;
+            color: #1a1a2e;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 25px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: background-color 0.3s ease, transform 0.3s ease;
         }
 
-        .service-card {
-            animation: fadeInUp 0.5s ease-out forwards;
-            opacity: 0;
+        .service-card .logout-btn:hover {
+            background-color: #fff;
+            transform: scale(1.05);
         }
-
         .service-card:nth-child(1) {
             animation-delay: 0.1s;
         }
@@ -353,112 +412,115 @@
         }
 
         .footer {
-    background-image: url('/placeholder.svg?height=1080&width=1920');
-    background-size: cover;
-    background-position: center;
-    color: #1e1c1c;
-    padding: 3rem 0 1rem;
-    font-family: Arial, sans-serif;
-    position: relative;
-  }
+            /* background-image: url('/placeholder.svg?height=1080&width=1920'); */
+            background-color: #0d0b0f7b;
+            background-size: cover;
+            background-position: center;
+            color: #1e1c1c;
+            padding: 3rem 0 1rem;
+            font-family: Arial, sans-serif;
+            position: relative;
+        }
 
-  .footer::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(255, 255, 255, 0.8);
-    z-index: 1;
-  }
+        .footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color:rgb(114, 184, 190);
+            z-index: 1;
+        }
 
-  .footer-container {
-    display: flex;
-    justify-content: space-between;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 2rem;
-    position: relative;
-    z-index: 2;
-  }
+        .footer-container {
+            display: flex;
+            justify-content: space-between;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 2;
+        }
 
-  .footer-info, .footer-form {
-    flex-basis: 48%;
-  }
+        .footer-info, .footer-form {
+            flex-basis: 48%;
+        }
 
-  .footer h3 {
-    font-size: 1.5rem;
-    margin-bottom: 1rem;
-    color: #191a1a;
-  }
+        .footer h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #191a1a;
+        }
 
-  .footer p {
-    margin-bottom: 0.5rem;
-  }
-  .form-group {
-    margin-bottom: 1rem;
-  }
+        .footer p {
+            margin-bottom: 0.5rem;
+        }
+        .form-group {
+            margin-bottom: 1rem;
+        }
 
-  .form-group label {
-    display: block;
-    margin-bottom: 0.5rem;
-  }
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+        }
 
-  .form-group input,
-  .form-group textarea {
-    width: 100%;
-    padding: 0.5rem;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 1rem;
-    background-color: rgba(255, 255, 255, 0.8);
-  }
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1rem;
+            background-color: rgba(255, 255, 255, 0.8);
+        }
 
-  .form-group textarea {
-    height: 100px;
-    resize: vertical;
-  }
+        .form-group textarea {
+            height: 100px;
+            resize: vertical;
+        }
 
-  .submit-btn {
-    background-color: #ff1443;
-    color: #1e1c1c;
-    border: none;
-    padding: 0.75rem 1.5rem;
-    font-size: 1rem;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
+        .submit-btn {
+            background-color: #ff1443;
+            color: #1e1c1c;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
 
-  .submit-btn:hover {
-    background-color: #00c4e0;
-  }
+        .submit-btn:hover {
+            background-color: #00c4e0;
+        }
 
-  .footer-bottom {
-    text-align: center;
-    padding: 0.5rem 0;
-    margin-top: 1rem;
-    border-top: 1px solid rgba(30, 28, 28, 0.1);
-    position: relative;
-    background-color: #c4ebf1;
-    z-index: 1;
-  }
+        .footer-bottom {
+            text-align: center;
+            padding: 0.1rem;
+            /* margin-top: 1rem; */
+            border-top: 2px solid rgba(24, 24, 24, 0.3);
+            position: relative;
+            background-color: #3a0735;
+            text-decoration-color: #41afe6;
+            z-index: 1;
+        }
 
-  @media (max-width: 768px) {
-    .footer-container {
-      flex-direction: column;
-    }
+        @media (max-width: 768px) {
+            .footer-container {
+                flex-direction: column;
+            }
 
-    .footer-info, .footer-form {
-      flex-basis: 100%;
-      margin-bottom: 2rem;
-    }
-  }
+            .footer-info, .footer-form {
+                flex-basis: 100%;
+                margin-bottom: 2rem;
+            }
+        }
     </style>
 </head>
 <body>
     <header id="header">
+        
         <div class="logo">Healios AI</div>
         <nav>
             <div class="menu-toggle" onclick="toggleMenu()">
@@ -488,6 +550,24 @@
         </nav>
     </header>
     <main>
+        <div class="wrapper">
+    
+            <div><span class="dot"></span></div>
+            <div><span class="dot"></span></div>
+            <div><span class="dot"></span></div>
+            <div><span class="dot"></span></div>
+            <div><span class="dot"></span></div>
+            <div><span class="dot"></span></div>
+            <div><span class="dot"></span></div>
+            <div><span class="dot"></span></div>
+            <div><span class="dot"></span></div>
+            <div><span class="dot"></span></div>
+            <div><span class="dot"></span></div>
+            <div><span class="dot"></span></div>
+            <div><span class="dot"></span></div>
+            <div><span class="dot"></span></div>
+            <div><span class="dot"></span></div>
+          </div>
         <section class="hero" id="home">
             <div class="hero-content">
                 <h1>Healios-AI</h1>
@@ -496,22 +576,24 @@
             </div>
         </section>
 
-      <section>
-        <div class="abtback-container">
-            <div class="abt-content" id="about-content">
+        <section class="about-section">
+            <div class="background-image"></div>
+            <div class="background-image1"></div>
+            <div class="content-card">
                 <h1>About Us</h1>
+                <div class="underline"></div>
                 <p>
-                    At Healios AI, we empower healthcare professionals with cutting-edge AI solutions 
-                    to streamline workflows and enhance patient care. Join us in reshaping the future of health.
+                    Healios-AI is a cutting-edge health tech platform committed to making healthcare more accessible and
+                    personalized. By using advanced AI, we provide comprehensive services tailored to different needs,
+                    from urban centers to underserved areas. Our goal is to merge innovation with accessibility to
+                    revolutionize personal health management.
                 </p>
             </div>
-        </div>
         </section>
-        
-    
 
         <section class="services-section" id="services" >
             <h2 >Our Services</h2>
+            <div class="underline1"></div>
             <div class="services-grid" >
                 <div class="service-card">
                     <div class="service-icon">📝</div>
@@ -560,10 +642,15 @@
 
               </div>
             </div>
-            <div class="footer-bottom">
+            <!-- <div class="footer-bottom">
               <p>&copy; 2024 Healios AI. All rights reserved.</p>
-            </div>
+            </div> -->
           </footer>
+          <div class="footer-bottom">
+            <p style="color: white;">&copy; 2024 Healios AI. All rights reserved.</p>
+          </div>
+
+         
     </main>
     <script>
         function toggleUserMenu() {
@@ -599,5 +686,4 @@
          this.reset();});
     </script>
 </body>
-
 </html>

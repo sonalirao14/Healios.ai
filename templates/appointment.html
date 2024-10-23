@@ -10,26 +10,162 @@
 
     <!-- Flatpickr JS -->
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: #333;
+            background: linear-gradient(45deg, #3498db, #8e44ad);
+            overflow-x: hidden;
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            opacity: 0;
+            animation: fadeIn 2s forwards;
+        }
+
+        .title-container {
+            width: 100%;
+            margin-bottom: 2rem;
+        }
+
+        h1 {
+            color: #3498db;
+            font-weight: 600;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            opacity: 0;
+            animation: slideInTop 1s forwards 2s;
+        }
+
+        .form-container {
+            width: 100%;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            margin-bottom: 0.5rem;
+            font-weight: 300;
+            opacity: 0;
+            animation: slideInLeft 0.5s forwards;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="submit"] {
+            width: 100%;
+            padding: 0.75rem;
+            margin-bottom: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: border-color 0.3s, box-shadow 0.3s;
+            opacity: 0;
+            animation: slideInRight 0.5s forwards;
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+        }
+
+        input[type="submit"] {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.3s;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #2980b9;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideInTop {
+            from { opacity: 0; transform: translateY(-50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideInLeft {
+            from { opacity: 0; transform: translateX(-50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        form > * {
+            animation-fill-mode: both;
+        }
+
+        form > *:nth-child(1) { animation-delay: 2.2s; }
+        form > *:nth-child(2) { animation-delay: 2.4s; }
+        form > *:nth-child(3) { animation-delay: 2.6s; }
+        form > *:nth-child(4) { animation-delay: 2.8s; }
+        form > *:nth-child(5) { animation-delay: 3.0s; }
+        form > *:nth-child(6) { animation-delay: 3.2s; }
+        form > *:nth-child(7) { animation-delay: 3.4s; }
+        form > *:nth-child(8) { animation-delay: 3.6s; }
+        form > *:nth-child(9) { animation-delay: 3.8s; }
+        form > *:nth-child(10) { animation-delay: 4.0s; }
+    </style>
 </head>
 <body>
-    <h1>Book an Appointment</h1>
-    <form method="POST">
-        {{ form.hidden_tag() }}
-        
-        <label for="name">Name:</label>
-        {{ form.name(size=20) }}<br><br>
+    <div class="container">
+        <div class="title-container">
+            <h1>Book an Appointment</h1>
+        </div>
+        <div class="form-container">
+            <form method="POST">
+                {{ form.hidden_tag() }}
+                
+                <label for="name">Name:</label>
+                {{ form.name(size=20, placeholder="Enter your name") }}
 
-        <label for="email">Email:</label>
-        {{ form.email(size=20) }}<br><br>
+                <label for="email">Email:</label>
+                {{ form.email(size=20, placeholder="Enter your email") }}
 
-        <label for="date">Select Date:</label>
-        {{ form.date(size=20, id="date-picker") }}<br><br>
+                <label for="date">Select Date:</label>
+                {{ form.date(size=20, id="date-picker", placeholder="Choose a date") }}
 
-        <label for="time">Select Time:</label>
-        {{ form.time(size=20, id="time-picker") }}<br><br>
+                <label for="time">Select Time:</label>
+                {{ form.time(size=20, id="time-picker", placeholder="Choose a time") }}
 
-        {{ form.submit() }}
-    </form>
+                {{ form.submit(value="Book Now") }}
+            </form>
+        </div>
+    </div>
 
     <script>
         // Initialize Flatpickr for Date

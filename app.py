@@ -1,4 +1,4 @@
-from flask import Flask,render_template,url_for,redirect,jsonify,flash,request
+from flask import Flask,render_template,url_for,redirect,jsonify,flash,request,send_file
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin,login_user,LoginManager,login_required,logout_user,current_user
 from flask_bcrypt import Bcrypt
@@ -11,6 +11,7 @@ from flask_cors import CORS
 import os
 import xlsxwriter
 import pandas as pd
+from flask_mail import Mail,Message
 
 app=Flask(__name__)
 bcrypt=Bcrypt(app)
@@ -30,6 +31,15 @@ def load_user(user_id):
 db=SQLAlchemy(app)
 migrate=Migrate(app,db,render_as_batch=True)
 cors=CORS(app)
+
+app.config['MAIL_SERVER']='smtp.gmail.com'
+app.config['MAIL_PORT']=465
+app.config['MAIL_USERNAME']='healios.ai31@gmail.com'
+app.config['MAIL_PASSWORD']='mtkwamvitfkanudb'
+app.config['MAIL_USE_TLS']=False
+app.config['MAIL_USE_SSL']=True
+
+mail=Mail(app)
 
 class User(db.Model,UserMixin):
     id=db.Column(db.Integer,primary_key=True)
@@ -393,8 +403,23 @@ def feedback():
         message=form.message.data
         save_feedback_to_excel(name,email,message)
         flash('Thank you for your feedback!', 'success')
+        message=Message(subject='Your Feedback for Healios.ai',sender='healios.ai31@gmail.com',recipients=[email])
+        message.body='Thanks for your feedback'
+        mail.send(message)
         return redirect('/dashboard')
     return render_template('feedback.html',form=form)
+
+@app.route('/download_feedback', methods=['GET'])
+@login_required  # Ensures only logged-in users can access
+def download_feedback():
+   
+
+    file_path = 'feedback.xlsx'
+    if os.path.exists(file_path):
+        return send_file(file_path, as_attachment=True)
+    else:
+        flash("The feedback file doesn't exist.", 'error')
+        return redirect('/dashboard')
 
 @app.route('/appointment',methods=['GET','POST'])
 @login_required

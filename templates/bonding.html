@@ -1,31 +1,338 @@
 <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Doctor's Bonding Hub</title>
+    <meta name="description" content="A platform for doctors to share experiences and bond">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
 
-<html>
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title></title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="">
-    </head>
-    <body>
-        <a href="{{url_for('write')}}">Want to write more about your yourself</a>
-        <a href="{{url_for('dashboard')}}" >Dashboard </a>
-        
+        body {
+            background-color: #fcecea;
+            background-image: url('data:image/svg+xml;charset=utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20100%20100%22%3E%3Cpath%20fill%3D%22%23ff69b4%22%20d%3D%22M10%2010h10v10H10zM30%2010h10v10H30z%22%2F%3E%3C%2Fsvg%3E');
+        }
 
-        <h2>Views what people say</h2>
-        {% for post in  posts%}
-        <li><strong>{{post.author}} on  {{ post.date_posted.strftime('%Y-%m-%d %H:%M:%S') }}:</strong></li>
-        <h2>{{post.title}}</h2>
-        <h3>Tags:{{post.tags}}</h3>
-        <p><strong>{{post.content}}</strong></p>
-        <button><a href="{{ url_for('like_post', id=post.id) }}">Click here to Like</a></button>
-        <button><a href="{{ url_for('comment', id=post.id) }}">Click here to Comment</a></button>
-        <button><a href="{{ url_for('delete_post', id=post.id) }}">Click here to delete</a></button>
-        {% endfor %}
-        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
 
+        .header {
+            text-align: center;
+            padding: 50px 0;
+            background: white;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
 
-    </body>
+        .header h1 {
+            color: #ff1493;
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+
+        .header .subtitle {
+            color: #5fb4b4;
+            font-size: 32px;
+            font-style: italic;
+        }
+
+        .nav {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+        }
+
+        .nav a {
+            text-decoration: none;
+            color: #333;
+            font-weight: bold;
+            font-size: 18px;
+            background: linear-gradient(45deg, #34db93, #349bdb);
+            color: #fff;
+            border-radius: 20px;
+            padding: 10px 20px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .nav a:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .content-wrapper {
+            display: flex;
+            gap: 80px;
+            flex-wrap: wrap;
+        }
+
+        .posts-section {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            flex: 1;
+            min-width: 280px;
+        }
+
+        .sub-heading2 {
+            font-size: 2em;
+            color: #14ffa1;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+            position: relative;
+            display: inline-block;
+            padding-bottom: 10px;
+            width: 100%;
+            /* border-radius: 5px; */
+        }
+
+        .sub-heading2::after {
+            content: '';
+            position: absolute;
+            width: 200px;
+            height: 3px;
+            background-color: #34db93;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(167, 234, 212, 0.5);
+        }
+
+        .post-list {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .post-item {
+            border-bottom: 1px solid #e0e0e0;
+            padding-bottom: 16px;
+            margin-bottom: 16px;
+            background-color: #8bc2f3;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .post-item:last-child {
+            border-bottom: none;
+        }
+
+        .post-meta {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-right: 15px;
+            background-size: cover;
+            background-position: center;
+            background-image:url(/Healios.ai/static/images/shared\ image.png)
+        }
+
+        .post-info {
+            flex-grow: 1;
+        }
+
+        .author {
+            font-weight: bold;
+            color: #1b3ff3;
+        }
+
+        .timestamp {
+            font-size: 0.8em;
+            color: #666;
+        }
+
+        .post-title {
+            font-size: 24px;
+            margin-bottom: 15px;
+            color: #110d0d;
+        }
+
+        .post-tags {
+            font-size: 0.9em;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .post-content {
+            color: #383131;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .post-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .like-comment-wrapper {
+            display: flex;
+            gap: 10px;
+        }
+
+        .like-button, .comment-button {
+            background-color: #ec5bf1;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 20px;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .more-options {
+            position: relative;
+        }
+
+        .more-button {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .options-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background-color: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .more-options:focus-within .options-menu {
+            display: block;
+        }
+
+        .menu-item {
+            padding: 8px 16px;
+            width: 100%;
+            text-align: left;
+            cursor: pointer;
+            border: none;
+            background: none;
+        }
+
+        .menu-item:hover {
+            background-color: #f0f2f5;
+        }
+
+        .comment-box {
+            margin-top: 12px;
+        }
+
+        .comment-input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #e0e0e0;
+            border-radius: 20px;
+            resize: none;
+        }
+
+        @media (max-width: 768px) {
+            .content-wrapper {
+                flex-direction: column;
+            }
+
+            .posts-section {
+                width: 100%;
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Doctor's Bonding Hub</h1>
+            <div class="subtitle">Share Experiences, Build Connections</div>
+        </header>
+
+        <nav class="nav">
+            <ul>
+                <li><a href="{{url_for('write')}}">Want to write more about yourself</a></li>
+                <li><a href="{{url_for('dashboard')}}">Dashboard</a></li>
+            </ul>
+        </nav>
+
+        <main>
+            <div class="content-wrapper">
+                <section class="posts-section">
+                    <h2 class="sub-heading2">Views: What People Say</h2>
+                    
+                    <ul class="post-list">
+                        {% for post in posts %}
+                        <li class="post-item">
+                            <div class="post-meta">
+                                <div class="avatar"></div>
+                                <div class="post-info">
+                                    <p class="author">{{ post.author }}</p>
+                                    <p class="timestamp">{{ post.date_posted.strftime('%Y-%m-%d %H:%M:%S') }}</p>
+                                </div>
+                                <div class="more-options">
+                                    <button class="more-button">⋮</button>
+                                    <div class="options-menu">
+                                        <button class="menu-item">
+                                            <a href="{{ url_for('delete_post', id=post.id) }}">Delete</a>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <h3 class="post-title">{{ post.title }}</h3>
+                            <div class="post-tags">Tags: {{ post.tags }}</div>
+                            <p class="post-content">{{ post.content }}</p>
+                            <div class="post-actions">
+                                <div class="like-comment-wrapper">
+                                    <button class="like-button">
+                                        <a href="{{ url_for('like_post', id=post.id) }}">👍 Like</a>
+                                    </button>
+                                    <button class="comment-button">
+                                        <a href="{{ url_for('comment', id=post.id) }}">💬 Comment</a>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="comment-box">
+                                <textarea class="comment-input" placeholder="Write a comment..."></textarea>
+                            </div>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </section>
+            </div>
+        </main>
+    </div>
+</body>
+
 </html>

@@ -9,7 +9,7 @@
     <style>
         /* Define the base theme colors */
         :root {
-            --primary-color: #3498db;
+            --primary-color: #9334db;
             --secondary-color: #2ecc71;
             --background-color: #f4f7f9;
             --text-color: #2d2727;
@@ -22,7 +22,8 @@
             font-family: 'Arial', sans-serif;
             line-height: 1.6;
             color: var(--text-color);
-            background-color: var(--background-color);
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            background-attachment: fixed;
             margin: 0;
             padding: 0;
         }
@@ -36,144 +37,271 @@
 
         /* Header settings */
         header {
-            background-color: var(--header-bg-color);
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            background-image: linear-gradient(to bottom, rgb(118, 118, 222),rgb(225, 154, 229));
+            box-shadow: 0 2px 4px rgba(240, 12, 12, 0.1);
             padding: 10px 0;
             margin-bottom: 20px;
-            position: sticky; /* Stick the header */
+            position: sticky;
             top: 0;
             z-index: 1000;
         }
-
-        /* Main heading styles */
         .main-heading {
             font-size: 2em;
             margin: 0;
             text-align: center;
+            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+            color: white;
+            font-weight: bolder;
+            animation: glow 2s ease-in-out infinite alternate;
         }
-
-        /* Navigation link styles */
+        @keyframes glow {
+            from {
+                text-shadow: 0 0 5px #2b2828, 0 0 10px #fff;
+            }
+            to {
+                text-shadow: 0 0 10px #675f5f, 0 0 20px #de8fb6;
+            }
+        }
         .nav-links {
             text-align: center;
             margin-top: 10px;
         }
-
-        /* Style individual navigation links */
-        .link {
-            display: inline-block;
-            background-color: var(--primary-color);
+        .link, .form-submit-btn {
+            background-image: linear-gradient(to right, #4776E6 0%, #8E54E9 51%, #4776E6 100%);
+            transition: 0.5s;
+            background-size: 200% auto;
             color: #fff;
+            box-shadow: 0 0 20px #eee;
+            border-radius: 10px;
+            display: inline-block;
             padding: 8px 15px;
             text-decoration: none;
-            border-radius: 5px;
             margin: 0 8px;
             font-size: 14px;
         }
-
-        /* Content wrapper to manage layout */
+        .link:hover, .form-submit-btn:hover {
+            background-position: right center;
+            color: #fff;
+            text-decoration: none;
+            transform: translateY(-3px);
+        }
         .content-wrapper {
             display: flex;
             gap: 30px;
-            flex-wrap: wrap; /* Wrap the content in smaller screens */
+            flex-wrap: wrap; 
+            overflow-x: hidden;
         }
-
-        /* Form section styles */
         .form-section, .posts-section {
             background-color: #fff;
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             flex: 1;
-            min-width: 280px; /* Ensure the sections don't get too small */
+            min-width: 280px; 
         }
 
-        /* Form group styles */
         .form-group {
             margin-bottom: 15px;
         }
 
-        /* Label styles for form fields */
         .form-label {
             display: block;
             margin-bottom: 5px;
             font-weight: bold;
             color: var(--primary-color);
         }
-
-        /* Input field styles */
         .form-input {
             width: 100%;
             padding: 10px;
             border: 1px solid var(--border-color);
             border-radius: 5px;
             font-size: 16px;
-            box-sizing: border-box; /* Ensure proper padding */
+            box-sizing: border-box; 
         }
-
-        /* Submit button styles */
         .form-submit-btn {
-            background-color: var(--secondary-color);
-            color: #fff;
             border: none;
             padding: 12px 24px;
             cursor: pointer;
-            border-radius: 5px;
             font-size: 16px;
             width: 100%;
         }
-
-        /* Sub-heading styles */
         .sub-heading {
-            color: var(--primary-color);
+            background-image: linear-gradient(to left, #553c9a, #f03c78);
+            color: transparent;
+            background-clip: text;
+            -webkit-background-clip: text;
             font-size: 1.8em;
+            font-family:system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
             margin-bottom: 20px;
-            border-bottom: 2px solid var(--primary-color);
+            border-bottom: 2px solid #553c9a;
             padding-bottom: 10px;
         }
 
-        /* Styles for the posts list */
+        .posts-section {
+            padding: 16px;
+        }
+        .sub-heading2{
+            background-image: linear-gradient(to bottom, #977dde, #f50e5b);
+            color: transparent;
+            background-clip: text;
+            -webkit-background-clip: text;
+            font-size: 1.8em;
+            font-family:system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            display: flex;
+            justify-items: center;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #553c9a;
+            padding-bottom: 15px;
+        }
         .post-list {
             list-style-type: none;
             padding: 0;
             margin: 0;
         }
-
-        /* Individual post item styles */
         .post-item {
-            background-color: #f9f9f9;
-            border: 1px solid var(--border-color);
-            border-radius: 5px;
-            padding: 15px;
-            margin-bottom: 15px;
+            border-bottom: 1px solid #e0e0e0;
+            padding-bottom: 16px;
+            margin-bottom: 16px;
         }
-
-        /* Post meta information styles */
+        .post-item:last-child {
+            border-bottom: none;
+        }
         .post-meta {
-            font-size: 0.9em;
-            color: #777;
-            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
         }
-
-        /* Post title styles */
+        .avatar {
+            background-image: url(/Healios.ai/static/images/shared\ image.png);
+            width: 60px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+            background-size: cover;
+        }
+        .post-info {
+            flex-grow: 1;
+        }
+        .author {
+            font-weight: bold;
+            margin: 0;
+        }
+        .timestamp {
+            color: #3e78eb;
+            font-size: 0.9em;
+            margin: 0;
+        }
         .post-title {
-            color: var(--primary-color);
-            margin: 10px 0;
+            font-size: 1.2em;
+            margin: 8px 0;
+            background-image: linear-gradient(to bottom, rgb(5, 51, 232) , rgb(124, 105, 235));
+            color: transparent;
+            background-clip: text;
+            -webkit-background-clip: text;
         }
-
-        /* Post tags styles */
         .post-tags {
-            color: var(--secondary-color);
+            color: #65676b;
             font-size: 0.9em;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
-
-        /* Post content styles */
         .post-content {
-            margin-top: 10px;
-            line-height: 1.6;
+            margin-bottom: 12px;
+            font-size: 1.2em;
+            font-weight: 20px;
         }
-
-        /* Responsive adjustments for mobile screens */
+        .post-actions {
+            display: flex;
+            justify-content: space-between;
+            border-top: 1px solid #e0e0e0;
+            padding-top: 12px;
+        }
+        .action-button {
+            background: none;
+            border: none;
+            color: #65676b;
+            font-size: 1em;
+            padding: 8px;
+            cursor: pointer;
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .action-button:hover {
+            background-color: #f0f2f5;
+        }
+        .emoji {
+            margin-right: 8px;
+            font-size: 1.2em;
+        }
+        .more-options {
+            position: relative;
+        }
+        .more-button {
+            background: none;
+            border: none;
+            color: #65676b;
+            font-size: 1.5em;
+            cursor: pointer;
+            padding: 0 8px;
+        }
+        .options-menu {
+            position: absolute;
+            right: 0;
+            top: 100%;
+            background-color: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: none;
+        }
+        .more-options:focus-within .options-menu {
+            display: block;
+        }
+        .menu-item {
+            display: block;
+            width: 100%;
+            padding: 8px 16px;
+            text-align: left;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+        .menu-item:hover {
+            background-color: #f0f2f5;
+        }
+        .like-checkbox {
+            display: none;
+        }
+        .like-checkbox:checked + .action-button {
+            color: #1877f2;
+        }
+        .like-checkbox:checked + .action-button .emoji {
+            animation: like-animation 0.5s;
+        }
+        @keyframes like-animation {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+        .comment-radio {
+            display: none;
+        }
+        .comment-box {
+            display: none;
+            margin-top: 12px;
+        }
+        .comment-radio:checked ~ .comment-box {
+            display: block;
+        }
+        .comment-input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #e0e0e0;
+            border-radius: 20px;
+            resize: none;
+        }
         @media (max-width: 768px) {
             header {
                 padding: 15px 0;
@@ -190,7 +318,7 @@
             }
 
             .link {
-                margin: 5px 10px; /* Adjust link spacing for smaller screens */
+                margin: 5px 10px;
             }
 
             .content-wrapper {
@@ -199,17 +327,17 @@
             }
 
             .form-section, .posts-section {
-                width: 100%; /* Full width for each section */
-                padding: 15px; /* Reduce padding */
+                width: 100%;
+                padding: 15px; 
             }
 
             .form-input {
-                padding: 10px; /* Ensure consistency */
-                font-size: 14px; /* Adjust font size */
+                padding: 10px; 
+                font-size: 14px; 
             }
 
             .form-submit-btn {
-                padding: 10px 20px; /* Adjust button size */
+                padding: 10px 20px; 
                 font-size: 14px;
             }
 
@@ -217,13 +345,44 @@
                 padding: 15px;
             }
         }
+
+        @keyframes slideInFromLeft {
+            0% {
+                transform: translateX(-100%);
+                opacity: 0;
+            }
+            100% {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideInFromRight {
+            0% {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            100% {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .form-section {
+            animation: slideInFromLeft 0.8s cubic-bezier(0.25, 0.1, 0.25, 1);
+        }
+
+        .posts-section {
+            animation: slideInFromRight 0.8s cubic-bezier(0.25, 0.1, 0.25, 1);
+        }
+   
     </style>
 </head>
 <body>
     <!-- Header section -->
     <header>
         <div class="container">
-            <h1 class="main-heading">🏥 Doctor's Bonding Hub</h1>
+            <h1 class="main-heading">🏥 Your Story: Page for your reflection</h1>
             <nav class="nav-links">
                 <a href="{{url_for('bonding')}}" class="link">See what others say</a>
                 <a href="{{url_for('dashboard')}}" class="link">Dashboard</a>
@@ -234,7 +393,6 @@
     <!-- Main content section -->
     <main class="container">
         <div class="content-wrapper">
-            <!-- Form section for adding new posts -->
             <section class="form-section">
                 <h2 class="sub-heading">Share Your Thoughts</h2>
                 <form method="POST" action="">
@@ -257,18 +415,41 @@
                 </form>
             </section>
 
-            <!-- Section for displaying posts -->
             <section class="posts-section">
-                <h2 class="sub-heading">Your Previous Posts</h2>
+                <h2 class="sub-heading2">Your Previous Posts</h2>
                 <ul class="post-list">
                     {% for post in posts %}
                     <li class="post-item">
                         <div class="post-meta">
-                            <strong>{{ post.author }}</strong> on {{ post.date_posted.strftime('%Y-%m-%d %H:%M:%S') }}
+                            <div class="avatar"></div>
+                            <div class="post-info">
+                                <p class="author">{{ post.author }}</p>
+                                <p class="timestamp">{{ post.date_posted.strftime('%Y-%m-%d %H:%M:%S') }}</p>
+                            </div>
+                            <div class="more-options">
+                                <button class="more-button">⋮</button>
+                                <div class="options-menu">
+                                    <button class="menu-item">Delete</button>
+                                </div>
+                            </div>
                         </div>
                         <h3 class="post-title">{{ post.title }}</h3>
                         <div class="post-tags">Tags: {{ post.tags }}</div>
-                        <p class="post-content">{{ post.content }}</p>
+                        <p  class="post-content">{{ post.content }}</p>
+                        <div class="post-actions">
+                            <input type="checkbox" id="like-{{ loop.index }}" class="like-checkbox">
+                            <label for="like-{{ loop.index }}" class="action-button">
+                                <span class="emoji">👍</span> Like
+                            </label>
+                            <input type="radio" id="comment-{{ loop.index }}" name="post-action-{{ loop.index }}" class="comment-radio">
+                
+                            <label for="comment-{{ loop.index }}" class="action-button">
+                                <span class="emoji">💬</span> Comment
+                            </label>
+                        </div>
+                        <div class="comment-box">
+                            <textarea class="comment-input" placeholder="Write a comment..."></textarea>
+                        </div>
                     </li>
                     {% endfor %}
                 </ul>

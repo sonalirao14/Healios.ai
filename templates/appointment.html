@@ -160,6 +160,12 @@
 
                 <label for="time">Select Time:</label>
                 {{ form.time(size=20, id="time-picker", placeholder="Choose a time") }}
+                
+                <label for="doctor">Select Doctor:</label>
+                <select name="doctor" id="doctor">
+                {% for doctor in doctors %}
+                    <option value="{{ doctor.name }}">{{ doctor.name }}</option>
+                {% endfor %}
 
                 {{ form.submit(value="Book Now") }}
             </form>

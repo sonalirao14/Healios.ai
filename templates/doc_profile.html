@@ -17,7 +17,8 @@
         <h3>Qualification:{{doc_profile.qualifications}}</h3>
         <h3>Specialties:{{doc_profile.specialties}}</h3>
         <button><a href="{{ url_for('description', id=doc_profile.id) }}">Click here for writing description</a></button>
-        
+        <a href="{{url_for('prescription')}}">Prescription Page </a> 
+        <a href="{{url_for('view')}}">Prescription List </a> 
         <script src="" async defer></script>
     </body>
 </html>

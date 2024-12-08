@@ -6,13 +6,7 @@ const Login = () => {
 
   const [isLogin, setIsLogin] = useState(true);
 
-  // const [loginEmail, setLoginEmail] = useState(true);
-  // const [loginPassword, setLoginPassword] = useState(true);
-
-  // const [registerEmail, setRegisterEmail] = useState("");
-  // const [registerPassword, setRegisterPassword] = useState("");
-  // const [registerName, setRegisterName] = useState("");
-  // const [registerAvatar, setRegisterAvatar] = useState("");
+  
 
   const LoginForm = () => {
     
@@ -102,3 +96,64 @@ const Login = () => {
 }
 
 export default Login
+
+// import React, { useState } from 'react';
+// import axios from 'axios';
+// import './App.css';
+
+// function App() {
+//   const [userMessage, setUserMessage] = useState('');
+//   const [chatLog, setChatLog] = useState([]);
+
+//   const sendMessage = async () => {
+//     if (!userMessage.trim()) return;
+
+//     // Add user message to the chat log
+//     setChatLog([...chatLog, { sender: 'user', text: userMessage }]);
+    
+//     try {
+//       // Make API call to Flask backend
+//       const response = await axios.post('http://127.0.0.1:5000/chatbot', {
+//         message: userMessage,
+//       });
+//       const botResponse = response.data.response;
+
+//       // Add bot response to the chat log
+//       setChatLog((prevLog) => [...prevLog, { sender: 'bot', text: botResponse }]);
+//     } catch (error) {
+//       console.error('Error communicating with the chatbot API:', error);
+//       setChatLog((prevLog) => [...prevLog, { sender: 'bot', text: 'Error: Unable to connect to chatbot API.' }]);
+//     }
+
+//     // Clear user input field
+//     setUserMessage('');
+//   };
+
+//   return (
+//     <div className="App">
+//       <h1>Chatbot</h1>
+//       <div className="chat-window">
+//         {chatLog.map((message, index) => (
+//           <div
+//             key={index}
+//             className={message.sender === 'user' ? 'user-message' : 'bot-message'}
+//           >
+//             <p>{message.text}</p>
+//           </div>
+//         ))}
+//       </div>
+//       <div className="input-area">
+//         <input
+//           type="text"
+//           placeholder="Type your message..."
+//           value={userMessage}
+//           onChange={(e) => setUserMessage(e.target.value)}
+//           onKeyPress={(e) => e.key === 'Enter' && sendMessage()}
+//         />
+//         <button onClick={sendMessage}>Send</button>
+//       </div>
+//     </div>
+//   );
+// }
+
+// export default App;

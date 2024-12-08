@@ -1,4 +1,4 @@
-from flask import Flask,render_template,url_for,redirect,jsonify,flash,request,send_file
+from flask import Flask,render_template,url_for,redirect,jsonify,flash,request,send_file,session
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin,login_user,LoginManager,login_required,logout_user,current_user
 from flask_bcrypt import Bcrypt
@@ -18,6 +18,25 @@ bcrypt=Bcrypt(app)
 app.config['SQLALCHEMY_DATABASE_URI']="sqlite:///test.db"
 app.config["SECRET_KEY"]='thisisasecretkey'
 
+
+
+# Separate LoginManager for doctors
+# doc_login_manager = LoginManager()
+# doc_login_manager.init_app(app)
+# doc_login_manager.login_view = "doc_login"
+
+# # Doctor model loader
+# @doc_login_manager.user_loader
+# def load_doctor(doctor_id):
+#     return Docs.query.get(int(doctor_id))
+
+# login_manager = LoginManager()
+# login_manager.init_app(app)
+# login_manager.login_view = "login"
+
+# @login_manager.user_loader
+# def load_user(user_id):
+#     return User.query.get(int(user_id))
 
 login_manager=LoginManager()
 login_manager.init_app(app)
@@ -78,7 +97,7 @@ class Docs(db.Model,UserMixin):
     password=db.Column(db.String(50),nullable=False)
     description=db.Column(db.Text,nullable=True)
     
-class Appointment(db.Model):
+class Appointments(db.Model):
     id=db.Column(db.Integer,primary_key=True)
     name=db.Column(db.String(100),nullable=False)
     email=db.Column(db.String(50), nullable=False)
@@ -86,7 +105,18 @@ class Appointment(db.Model):
     time = db.Column(db.String(5), nullable=False)
     status = db.Column(db.String(20), default="Pending") 
     author=db.Column(db.String(50),nullable=False)
-    
+    doctor=db.Column(db.String(50),nullable=False)
+
+class Prescriptions(db.Model):
+    id=db.Column(db.Integer,primary_key=True)
+    patient_name=db.Column(db.String(100),nullable=False)
+    doctor_name=db.Column(db.String(100),nullable=False)
+    email=db.Column(db.String(100),nullable=False)
+    medication=db.Column(db.String(100),nullable=False)
+    dosage=db.Column(db.String(100),nullable=False)
+    instructions=db.Column(db.String(100),nullable=False)
+    diagnosis=db.Column(db.String(100),nullable=False)
+
 
 class RegisterForm(FlaskForm):
     username=StringField(validators=[InputRequired(),Length(min=4,max=20)],render_kw={"placeholder":"Username"})
@@ -154,11 +184,25 @@ class AppointmentForm(FlaskForm):
     email=StringField('Email',validators=[InputRequired(),Email()])
     date=StringField('Date',validators=[InputRequired()])
     time=StringField('time',validators=[InputRequired()])
+    doctor=StringField('doctor',validators=[InputRequired()])
     submit=SubmitField('Submit')
 
 class StatusForm(FlaskForm):
     status=SelectField('Status',choices=[('Accepted', 'Accept'), ('Rejected', 'Reject')])
     submit=SubmitField('Submit')
+
+class PresciptionForm(FlaskForm):
+    name=StringField('Patient Name',validators=[InputRequired()])
+    email=StringField('Patient Email',validators=[InputRequired(),Email()])
+    doctor_name=StringField('Doctors Name',validators=[InputRequired()])
+    medication=StringField('Medication',validators=[InputRequired()])
+    dosage = StringField('Dosage', validators=[InputRequired()])
+    instructions = TextAreaField('Instructions', validators=[InputRequired()])
+    diagnosis=StringField('Diagnosis', validators=[InputRequired()])
+    submit=SubmitField('Submit')
+
+e_prescription=[]
+
 
 @app.route('/')
 def index():
@@ -424,24 +468,26 @@ def download_feedback():
 @app.route('/appointment',methods=['GET','POST'])
 @login_required
 def appointment():
+    doctors=Docs.query.all()
     form=AppointmentForm()
     if form.validate_on_submit():
-        appointment=Appointment(name=form.name.data,email=form.email.data,date=form.date.data,time=form.time.data,author=current_user.username)
+        appointment=Appointments(name=form.name.data,email=form.email.data,date=form.date.data,time=form.time.data,author=current_user.username,doctor=form.doctor.data)
         db.session.add(appointment)
         db.session.commit()
         return redirect('/dashboard')
-    return render_template('appointment.html',form=form)
+    return render_template('appointment.html',form=form,doctors=doctors)
 
 @app.route('/schedule',methods=['GET','POST'])
 @login_required
 def schedule():
-    appointment_scheduled=Appointment.query.filter_by(author=current_user.username).all()
+    appointment_scheduled=Appointments.query.filter_by(author=current_user.username).all()
     return render_template('schedule.html',appointment_scheduled=appointment_scheduled)
 
 @app.route('/doctor_appointment',methods=['GET','POST'])
 @login_required
 def doctor_appointment():
-    appointments=Appointment.query.filter_by(status='Pending').all()
+    docs=Docs.query.all()
+    appointments=Appointments.query.filter_by(status='Pending',doctor=docs[0].name).all()
     form=StatusForm()
     if form.validate_on_submit():
         return redirect(url_for('doctor_appointments'))
@@ -451,13 +497,85 @@ def doctor_appointment():
 def update_status(appointment_id):
     form=StatusForm()
     if form.validate_on_submit():
-        appointment=Appointment.query.get_or_404(appointment_id)
+        appointment=Appointments.query.get_or_404(appointment_id)
         appointment.status=form.status.data
         db.session.commit()
         return redirect('/doctor_appointment')
     return render_template('doc_page')
 
+@app.route('/prescription',methods=['GET','POST'])
+@login_required
+def prescription():
+    docs=Docs.query.all()
+    form=PresciptionForm()
+    if form.validate_on_submit():
+        prescrip=Prescriptions(patient_name=form.name.data,email=form.email.data,doctor_name=form.doctor_name.data,medication=form.medication.data,dosage=form.dosage.data,instructions=form.instructions.data,diagnosis=form.diagnosis.data)
+        db.session.add(prescrip)
+        db.session.commit()
+        # prescription={
+        #     'patient_name':form.name.data,
+        #     'doctor_name':form.doctor_name.data,
+        #     'medication':form.medication.data,
+        #     'dosage':form.dosage.data,
+        #     'instructions':form.instructions.data,
+        #     'email':form.email.data
+        # }
+        # print("Adding prescription:", prescription)
+        # e_prescription.append([prescription])
+        email_patient=form.email.data
+        if email_patient:
+            try:
+                msg=Message(subject='Your Prescription',sender='healios.ai31@gmail.com',recipients=[email_patient])
+                msg.body = f"""\
+Hello {form.name.data},
 
+Your prescription details are as follows:
+- Doctor: {form.doctor_name.data}
+- Medication: {form.medication.data}
+- Dosage: {form.dosage.data}
+- Instructions: {form.instructions.data}
+- Diagnosis: {form.diagnosis.data}
+
+Take care,
+Your Healthcare Provider
+Healios.ai
+"""
+                # msg.body = (f"Patient Name: {prescription['patient_name']}\n"
+                #             f"Doctor Name: {prescription['doctor_name']}\n"
+                #             f"Medication: {prescription['medication']}\n"
+                #             f"Dosage: {prescription['dosage']}\n"
+                #             f"Instructions: {prescription['instructions']}")
+                mail.send(msg)
+                flash('Prescription emailed successfully!', 'success')
+            except Exception as e:
+                flash(f'Failed to send email: {e}', 'danger')
+                return render_template('view.html')
+    return render_template('prescription.html',form=form,docs=docs)
+
+@app.route('/prescription/<int:id>')
+def view_prescription(id):
+    patient_prescription=Prescriptions.query.get_or_404(id)
+    return render_template('view.html',patient_prescription=patient_prescription)
+    
+@app.route('/view')
+@login_required
+def view():
+    doctor_name=session.get('doctor_name')
+    print(doctor_name)
+    docs=Docs.query.all()
+    prescriptions=Prescriptions.query.filter_by(doctor_name=docs[0].name).all()
+    return render_template('prescription_list.html',prescriptions=prescriptions)
+
+@app.route('/delete_prescription/<int:id>',methods=['GET','POST'])
+@login_required
+def delete_prescription(id):
+    pres_to_delete=Prescriptions.query.get_or_404(id)
+    try:
+        db.session.delete(pres_to_delete)
+        db.session.commit()
+    except:
+        return('You cant delete this post')
+    return render_template('prescription_list.html')
 
 if __name__=='__main__':
     app.run(port=5000,debug=True, host='0.0.0.0')

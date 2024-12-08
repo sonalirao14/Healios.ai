@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Prescription</title>
+</head>
+<body>
+    <h1>Create New Prescription</h1>
+    <form method="POST" action=" ">
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.name.label }}<br>
+            {{ form.name(size=32) }}<br>
+            {% for error in form.name.errors %}
+                <span style="color: red;">{{ error }}</span>
+            {% endfor %}
+        </p>
+        <p>
+           
+
+            <label for="doctor_name">Select Doctor:</label><br>
+    <select name="doctor_name" id="doctor_name" class="form-control">
+        {% for doctor in docs %}
+            <option value="{{ doctor.name }}">{{ doctor.name }}</option>
+        {% endfor %}
+    </select><br>
+    {% for error in form.doctor_name.errors %}
+        <span style="color: red;">{{ error }}</span>
+    {% endfor %} 
+        </p>
+        <p>
+            {{ form.medication.label }}<br>
+            {{ form.medication(size=32) }}<br>
+            {% for error in form.medication.errors %}
+                <span style="color: red;">{{ error }}</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.dosage.label }}<br>
+            {{ form.dosage(size=32) }}<br>
+            {% for error in form.dosage.errors %}
+                <span style="color: red;">{{ error }}</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.instructions.label }}<br>
+            {{ form.instructions(rows=4, cols=40) }}<br>
+            {% for error in form.instructions.errors %}
+                <span style="color: red;">{{ error }}</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.email.label }}<br>
+            {{ form.email(size=32) }}<br>
+            {% for error in form.email.errors %}
+                <span style="color: red;">{{ error }}</span>
+            {% endfor %}
+            {{ form.diagnosis.label }}<br>
+            {{ form.diagnosis(size=32) }}<br>
+            {% for error in form.diagnosis.errors %}
+                <span style="color: red;">{{ error }}</span>
+            {% endfor %}
+        </p>
+        <p>{{ form.submit() }}</p>
+    </form>
+    <a href="{{url_for('doctor_page')}}">Doctor Dashboard </a>
+    <a href="{{url_for('view')}}">Prescription List </a> 
+</body>
+</html>

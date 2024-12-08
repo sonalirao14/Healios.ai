@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prescription List</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+        th {
+            background-color: #f2f2f2;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <h1>E-Prescription Generator</h1>
+    <a href="{{ url_for('prescription') }}">Create New Prescription</a>
+    <h2>All Prescriptions</h2>
+
+    {% if prescriptions %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Patient Name</th>
+                    <th>Doctor Name</th>
+                    <th>Diagnosis</th>
+                    <th>Actions</th>
+                    <th>Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for prescription in prescriptions %}
+                    <tr>
+                        <td>{{ prescription.patient_name }}</td>
+                        <td>{{ prescription.doctor_name }}</td>
+                        <td>{{ prescription.diagnosis}}</td>
+                        <td>
+                            <a href="{{ url_for('view_prescription', id=prescription.id) }}">View</a>
+                        </td>
+                        <td>
+                            <a href="{{ url_for('delete_prescription', id=prescription.id) }}">Delete</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No prescriptions found. Create one <a href="{{ url_for('prescription') }}">here</a>.</p>
+    {% endif %}
+</body>
+</html>

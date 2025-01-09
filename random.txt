@@ -1,0 +1,5 @@
+{{ form.doctor_name.label }}<br>
+             {{ form.doctor_name(size=32) }}<br>
+            {% for error in form.doctor_name.errors %}
+                <span style="color: red;">{{ error }}</span>
+            {% endfor %} 
